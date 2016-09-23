@@ -26,6 +26,8 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 
+#define USE_I2C_2V8
+
 #include "vl53l0x_api.h"
 #include "vl53l0x_tuning.h"
 #include "vl53l0x_interrupt_threshold_settings.h"
@@ -386,6 +388,14 @@ VL53L0X_Error VL53L0X_DataInit(VL53L0X_DEV Dev)
 	if (Status == VL53L0X_ERROR_NONE)
 		Status = VL53L0X_WrByte(Dev, 0x88, 0x00);
 
+	/* read WHO_AM_I */
+	uint8_t b;
+	Status = VL53L0X_RdByte(Dev, 0xC0, &b);
+	Serial.print("WHOAMI: 0x");
+	Serial.println(b, HEX);
+	   
+	/* read WHO_AM_I */
+
 	VL53L0X_SETDEVICESPECIFICPARAMETER(Dev, ReadDataFromDeviceDone, 0);
 
 #ifdef USE_IQC_STATION
@@ -410,6 +420,7 @@ VL53L0X_Error VL53L0X_DataInit(VL53L0X_DEV Dev)
 
 	/* Get default parameters */
 	Status = VL53L0X_GetDeviceParameters(Dev, &CurrentParameters);
+
 	if (Status == VL53L0X_ERROR_NONE) {
 		/* initialize PAL values */
 		CurrentParameters.DeviceMode = VL53L0X_DEVICEMODE_SINGLE_RANGING;
@@ -499,7 +510,6 @@ VL53L0X_Error VL53L0X_DataInit(VL53L0X_DEV Dev)
 
 	if (Status == VL53L0X_ERROR_NONE)
 		VL53L0X_SETDEVICESPECIFICPARAMETER(Dev, RefSpadsInitialised, 0);
-
 
 	LOG_FUNCTION_END(Status);
 	return Status;
@@ -2551,7 +2561,6 @@ VL53L0X_Error VL53L0X_PerformSingleRangingMeasurement(VL53L0X_DEV Dev,
 
 	if (Status == VL53L0X_ERROR_NONE)
 		Status = VL53L0X_PerformSingleMeasurement(Dev);
-
 
 	if (Status == VL53L0X_ERROR_NONE)
 		Status = VL53L0X_GetRangingMeasurementData(Dev,
