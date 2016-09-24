@@ -23,7 +23,21 @@
 
 #include "vl53l0x_api.h"
 
+#define VL53L0X_I2C_ADDR 0x29
+
 class Adafruit_VL53L0X {
  public:
+  boolean begin(void);
+  void print_range_status(VL53L0X_RangingMeasurementData_t* pRangingMeasurementData);
+  VL53L0X_Error rangingTest(void);
+
+
+  VL53L0X_Error Status = VL53L0X_ERROR_NONE;
+
  private:
+  VL53L0X_Dev_t MyDevice;
+  VL53L0X_Dev_t *pMyDevice = &MyDevice;
+  VL53L0X_Version_t                   Version;
+  VL53L0X_Version_t                  *pVersion   = &Version;
+  VL53L0X_DeviceInfo_t                DeviceInfo;
 };
