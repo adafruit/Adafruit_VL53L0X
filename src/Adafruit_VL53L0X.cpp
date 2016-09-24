@@ -16,59 +16,41 @@ boolean Adafruit_VL53L0X::begin(void) {
   pMyDevice->comms_type      =  1;
   pMyDevice->comms_speed_khz =  400;
 
-  Serial.println("initializing");
-  Status = VL53L0X_i2c_init();
-  Serial.print("Stat: "); Serial.println(Status);
-  if (Status != VL53L0X_ERROR_NONE) {
-      Status = VL53L0X_ERROR_CONTROL_INTERFACE;
-      return false;
-  } else {
-     Serial.println(F("Inited Comms"));
-  }  
-
-  if (Status != VL53L0X_ERROR_NONE) 
-    return false;
-
-
-  status_int = VL53L0X_GetVersion(pVersion);
-  if (status_int !=  VL53L0X_ERROR_NONE) {
-    Status = VL53L0X_ERROR_CONTROL_INTERFACE;
-    return false;
-  }
   
-  if( pVersion->major != VERSION_REQUIRED_MAJOR ||
-      pVersion->minor != VERSION_REQUIRED_MINOR ||
-      pVersion->build != VERSION_REQUIRED_BUILD )  {
-    Serial.print(F("VL53L0X API Version Error: Your firmware has "));
-    Serial.print(pVersion->major); Serial.print('.');
-    Serial.print(pVersion->minor); Serial.print('.');
-    Serial.print(pVersion->build); Serial.print(" rev ");
-    Serial.println(pVersion->revision); 
-    Serial.println(F("This example requires " STR(VERSION_REQUIRED_MAJOR) "." STR(VERSION_REQUIRED_MINOR) "." STR(VERSION_REQUIRED_BUILD)));
+  Wire.begin();  // VL53L0X_i2c_init();
+
+  // unclear if this is even needed:
+  if( VL53L0X_IMPLEMENTATION_VER_MAJOR != VERSION_REQUIRED_MAJOR ||
+      VL53L0X_IMPLEMENTATION_VER_MINOR != VERSION_REQUIRED_MINOR ||
+      VL53L0X_IMPLEMENTATION_VER_SUB != VERSION_REQUIRED_BUILD )  {
+
+    Serial.println(F("Found " STR(VL53L0X_IMPLEMENTATION_VER_MAJOR) "." STR(VL53L0X_IMPLEMENTATION_VER_MINOR) "."  STR(VL53L0X_IMPLEMENTATION_VER_SUB) " rev " STR(VL53L0X_IMPLEMENTATION_VER_REVISION)));
+    Serial.println(F("Requires " STR(VERSION_REQUIRED_MAJOR) "." STR(VERSION_REQUIRED_MINOR) "." STR(VERSION_REQUIRED_BUILD)));
     return false;
   }
 
-  Serial.println(F("Data init VL53L0X"));
   Status = VL53L0X_DataInit(&MyDevice); // Data initialization
 
-  Serial.println(F("Get device info"));
   Status = VL53L0X_GetDeviceInfo(&MyDevice, &DeviceInfo);
   if (Status != VL53L0X_ERROR_NONE)
     return false;
 
   if(Status == VL53L0X_ERROR_NONE)  {
+  /*
      Serial.println(F("VL53L0X_GetDeviceInfo:"));
      Serial.print(F("Device Name : ")); Serial.println(DeviceInfo.Name);
      Serial.print(F("Device Type : ")); Serial.println(DeviceInfo.Type);
      Serial.print(F("Device ID : ")); Serial.println(DeviceInfo.ProductId);
      Serial.print(F("ProductRevisionMajor : ")); Serial.println(DeviceInfo.ProductRevisionMajor);
      Serial.print(F("ProductRevisionMinor : ")); Serial.println(DeviceInfo.ProductRevisionMinor);
-
+  */
      if ((DeviceInfo.ProductRevisionMinor != 1) && (DeviceInfo.ProductRevisionMinor != 1)) {
+       /*
        Serial.print(F("Error expected cut 1.1 but found cut ")); 
        Serial.print(DeviceInfo.ProductRevisionMajor);
        Serial.print('.');
        Serial.println(DeviceInfo.ProductRevisionMinor);
+       */
        Status = VL53L0X_ERROR_NOT_SUPPORTED;
        return false;     
      }
