@@ -1,7 +1,7 @@
 #include "vl53l0x_i2c_platform.h"
 #include "vl53l0x_def.h"
 
-#define I2C_DEBUG
+//#define I2C_DEBUG
 
 int VL53L0X_i2c_init(void) {
   Wire.begin();

@@ -59,10 +59,9 @@ boolean Adafruit_VL53L0X::begin(void) {
 }
 
 
-VL53L0X_Error Adafruit_VL53L0X::rangingTest(void)
+VL53L0X_Error Adafruit_VL53L0X::rangingTest(VL53L0X_RangingMeasurementData_t *RangingMeasurementData)
 {
     VL53L0X_Error Status = VL53L0X_ERROR_NONE;
-    VL53L0X_RangingMeasurementData_t    RangingMeasurementData;
     int i;
     FixPoint1616_t LimitCheckCurrent;
     uint32_t refSpadCount;
@@ -130,24 +129,20 @@ VL53L0X_Error Adafruit_VL53L0X::rangingTest(void)
 
     if(Status == VL53L0X_ERROR_NONE)
     {
-        for(i=0;i<10;i++){
-            Serial.println(F("Call of VL53L0X_PerformSingleRangingMeasurement"));
-            Status = VL53L0X_PerformSingleRangingMeasurement(pMyDevice,
-                &RangingMeasurementData);
-
-            print_range_status(&RangingMeasurementData);
-
-            VL53L0X_GetLimitCheckCurrent(pMyDevice,
-                VL53L0X_CHECKENABLE_RANGE_IGNORE_THRESHOLD, &LimitCheckCurrent);
-
-            Serial.print(F("RANGE IGNORE THRESHOLD: "));
-            Serial.println((float)LimitCheckCurrent/65536.0);
-
-            if (Status != VL53L0X_ERROR_NONE) break;
-
-            Serial.print(F("Measured distance: "));
-            Serial.println(RangingMeasurementData.RangeMilliMeter);
-        }
+      Serial.println(F("Call of VL53L0X_PerformSingleRangingMeasurement"));
+      Status = VL53L0X_PerformSingleRangingMeasurement(pMyDevice,
+						       RangingMeasurementData);
+      
+      print_range_status(RangingMeasurementData);
+      
+      VL53L0X_GetLimitCheckCurrent(pMyDevice,
+				   VL53L0X_CHECKENABLE_RANGE_IGNORE_THRESHOLD, &LimitCheckCurrent);
+      
+      Serial.print(F("RANGE IGNORE THRESHOLD: "));
+      Serial.println((float)LimitCheckCurrent/65536.0);
+      
+      Serial.print(F("Measured distance: "));
+      Serial.println(RangingMeasurementData->RangeMilliMeter);
     }
     return Status;
 }
