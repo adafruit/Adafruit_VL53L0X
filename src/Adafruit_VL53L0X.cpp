@@ -59,7 +59,7 @@ boolean Adafruit_VL53L0X::begin(void) {
 }
 
 
-VL53L0X_Error Adafruit_VL53L0X::rangingTest(VL53L0X_RangingMeasurementData_t *RangingMeasurementData)
+VL53L0X_Error Adafruit_VL53L0X::rangingTest(VL53L0X_RangingMeasurementData_t *RangingMeasurementData, boolean debug = false)
 {
     VL53L0X_Error Status = VL53L0X_ERROR_NONE;
     int i;
@@ -71,34 +71,39 @@ VL53L0X_Error Adafruit_VL53L0X::rangingTest(VL53L0X_RangingMeasurementData_t *Ra
 
     if(Status == VL53L0X_ERROR_NONE)
     {
-        Serial.println(F("Call of VL53L0X_StaticInit"));
-        Status = VL53L0X_StaticInit(pMyDevice); // Device Initialization
+      if (debug)
+	Serial.println(F("Call of VL53L0X_StaticInit"));
+      Status = VL53L0X_StaticInit(pMyDevice); // Device Initialization
     }
     
     if(Status == VL53L0X_ERROR_NONE)
     {
+      if (debug)
         Serial.println(F("Call of VL53L0X_PerformRefCalibration"));
-        Status = VL53L0X_PerformRefCalibration(pMyDevice,
-            &VhvSettings, &PhaseCal); // Device Initialization
+      Status = VL53L0X_PerformRefCalibration(pMyDevice,
+		&VhvSettings, &PhaseCal); // Device Initialization
     }
 
     if(Status == VL53L0X_ERROR_NONE)
     {
+      if (debug)
         Serial.println(F("Call of VL53L0X_PerformRefSpadManagement"));
-        Status = VL53L0X_PerformRefSpadManagement(pMyDevice,
+      Status = VL53L0X_PerformRefSpadManagement(pMyDevice,
             &refSpadCount, &isApertureSpads); // Device Initialization
-        Serial.print(F("refSpadCount = ")); 
+      if (debug) {
+	Serial.print(F("refSpadCount = ")); 
         Serial.print(refSpadCount);
         Serial.print(F(", isApertureSpads = "));
         Serial.println(isApertureSpads);
+      }
     }
 
     if(Status == VL53L0X_ERROR_NONE)
     {
-
         // no need to do this when we use VL53L0X_PerformSingleRangingMeasurement
+      if (debug)
         Serial.println(F("Call of VL53L0X_SetDeviceMode"));
-        Status = VL53L0X_SetDeviceMode(pMyDevice, VL53L0X_DEVICEMODE_SINGLE_RANGING); // Setup in single ranging mode
+      Status = VL53L0X_SetDeviceMode(pMyDevice, VL53L0X_DEVICEMODE_SINGLE_RANGING); // Setup in single ranging mode
     }
 
     // Enable/Disable Sigma and Signal check
@@ -129,20 +134,24 @@ VL53L0X_Error Adafruit_VL53L0X::rangingTest(VL53L0X_RangingMeasurementData_t *Ra
 
     if(Status == VL53L0X_ERROR_NONE)
     {
-      Serial.println(F("Call of VL53L0X_PerformSingleRangingMeasurement"));
+      if (debug)
+	Serial.println(F("Call of VL53L0X_PerformSingleRangingMeasurement"));
       Status = VL53L0X_PerformSingleRangingMeasurement(pMyDevice,
 						       RangingMeasurementData);
       
-      print_range_status(RangingMeasurementData);
+      if (debug)
+	print_range_status(RangingMeasurementData);
       
       VL53L0X_GetLimitCheckCurrent(pMyDevice,
 				   VL53L0X_CHECKENABLE_RANGE_IGNORE_THRESHOLD, &LimitCheckCurrent);
       
-      Serial.print(F("RANGE IGNORE THRESHOLD: "));
-      Serial.println((float)LimitCheckCurrent/65536.0);
-      
-      Serial.print(F("Measured distance: "));
-      Serial.println(RangingMeasurementData->RangeMilliMeter);
+      if (debug) {
+	Serial.print(F("RANGE IGNORE THRESHOLD: "));
+	Serial.println((float)LimitCheckCurrent/65536.0);
+	
+	Serial.print(F("Measured distance: "));
+	Serial.println(RangingMeasurementData->RangeMilliMeter);
+      }
     }
     return Status;
 }

@@ -29,7 +29,7 @@ class Adafruit_VL53L0X {
  public:
   boolean begin(void);
   void print_range_status(VL53L0X_RangingMeasurementData_t* pRangingMeasurementData);
-  VL53L0X_Error rangingTest(VL53L0X_RangingMeasurementData_t* pRangingMeasurementData);
+  VL53L0X_Error rangingTest(VL53L0X_RangingMeasurementData_t* pRangingMeasurementData, boolean debug = false);
 
 
   VL53L0X_Error Status = VL53L0X_ERROR_NONE;
