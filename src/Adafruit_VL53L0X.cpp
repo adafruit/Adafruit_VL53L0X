@@ -8,7 +8,7 @@
 #define STR( x )        STR_HELPER(x)
 
 
-boolean Adafruit_VL53L0X::begin( boolean debug ) {
+boolean Adafruit_VL53L0X::begin(uint8_t i2c_addr, boolean debug ) {
   int32_t   status_int;
   int32_t   init_done         = 0;
 
@@ -18,7 +18,7 @@ boolean Adafruit_VL53L0X::begin( boolean debug ) {
   uint8_t   PhaseCal;
 
   // Initialize Comms
-  pMyDevice->I2cDevAddr      =  VL53L0X_I2C_ADDR;  // 7 bit addr
+  pMyDevice->I2cDevAddr      =  VL53L0X_I2C_ADDR;  // default
   pMyDevice->comms_type      =  1;
   pMyDevice->comms_speed_khz =  400;
 
@@ -39,6 +39,10 @@ boolean Adafruit_VL53L0X::begin( boolean debug ) {
   }
 
   Status = VL53L0X_DataInit( &MyDevice );         // Data initialization
+
+  if (! setAddress(i2c_addr) ) {
+    return false;
+  }
 
   Status = VL53L0X_GetDeviceInfo( &MyDevice, &DeviceInfo );
 
@@ -134,6 +138,19 @@ boolean Adafruit_VL53L0X::begin( boolean debug ) {
   }
 }
 
+boolean Adafruit_VL53L0X::setAddress(uint8_t newAddr) {
+  newAddr &= 0x7F;
+
+  VL53L0X_SetDeviceAddress(pMyDevice, newAddr * 2); // 7->8 bit
+
+  delay(10);
+
+  if( Status == VL53L0X_ERROR_NONE ) {
+    pMyDevice->I2cDevAddr = newAddr;  // 7 bit addr
+    return true;
+  }
+  return false;
+}
 
 VL53L0X_Error Adafruit_VL53L0X::getSingleRangingMeasurement( VL53L0X_RangingMeasurementData_t *RangingMeasurementData, boolean debug )
 {
