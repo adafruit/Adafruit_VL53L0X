@@ -141,7 +141,7 @@ boolean Adafruit_VL53L0X::begin(uint8_t i2c_addr, boolean debug ) {
 boolean Adafruit_VL53L0X::setAddress(uint8_t newAddr) {
   newAddr &= 0x7F;
 
-  VL53L0X_SetDeviceAddress(pMyDevice, newAddr * 2); // 7->8 bit
+  Status = VL53L0X_SetDeviceAddress(pMyDevice, newAddr * 2); // 7->8 bit
 
   delay(10);
 
