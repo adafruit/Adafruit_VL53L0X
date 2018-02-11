@@ -13,6 +13,8 @@
   Written by Limor Fried/Ladyada for Adafruit Industries.
   BSD license, all text above must be included in any redistribution
  ****************************************************/
+#ifndef ADAFRUIT_VL53L0X_H
+#define ADAFRUIT_VL53L0X_H
 
 #if ( ARDUINO >= 100 )
   #include "Arduino.h"
@@ -31,9 +33,9 @@ class Adafruit_VL53L0X
     boolean       begin(uint8_t i2c_addr = VL53L0X_I2C_ADDR, boolean debug = false );
     boolean       setAddress(uint8_t newAddr);
 
-    VL53L0X_Error 
-      rangingTest(VL53L0X_RangingMeasurementData_t* pRangingMeasurementData, 
-		  boolean debug = false) 
+    VL53L0X_Error
+      rangingTest(VL53L0X_RangingMeasurementData_t* pRangingMeasurementData,
+		  boolean debug = false)
     { getSingleRangingMeasurement(pRangingMeasurementData, debug); };
 
     VL53L0X_Error getSingleRangingMeasurement( VL53L0X_RangingMeasurementData_t* pRangingMeasurementData, boolean debug = false );
@@ -48,3 +50,5 @@ class Adafruit_VL53L0X
   VL53L0X_Version_t                   *pVersion   = &Version;
   VL53L0X_DeviceInfo_t                DeviceInfo;
 };
+
+#endif // ADAFRUIT_VL53L0X_H
