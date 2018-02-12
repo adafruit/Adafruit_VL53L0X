@@ -16,6 +16,9 @@
   BSD license, all text above must be included in any redistribution
  ****************************************************/
 
+#ifndef ADAFRUIT_VL53L0X_H
+#define ADAFRUIT_VL53L0X_H
+
 #if ( ARDUINO >= 100 )
   #include "Arduino.h"
 #else
@@ -63,3 +66,5 @@ class Adafruit_VL53L0X
   VL53L0X_Version_t                   *pVersion   = &Version;
   VL53L0X_DeviceInfo_t                DeviceInfo;
 };
+
+#endif
