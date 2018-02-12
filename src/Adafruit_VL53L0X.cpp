@@ -1,13 +1,51 @@
+/*!
+ * @file Adafruit_VL53L0X.cpp
+ *
+ * @mainpage Adafruit VL53L0X time-of-flight sensor
+ *
+ * @section intro_sec Introduction
+ *
+ * This is the documentation for Adafruit's VL53L0X driver for the
+ * Arduino platform.  It is designed specifically to work with the
+ * Adafruit VL53L0X breakout: https://www.adafruit.com/product/3317
+ *
+ * These sensors use I2C to communicate, 2 pins (SCL+SDA) are required
+ * to interface with the breakout.
+ *
+ * Adafruit invests time and resources providing this open source code,
+ * please support Adafruit and open-source hardware by purchasing
+ * products from Adafruit!
+ *
+ * @section dependencies Dependencies
+ *
+ *
+ * @section author Author
+ *
+ * Written by Limor Fried/Ladyada for Adafruit Industries.
+ *
+ * @section license License
+ *
+ * BSD license, all text here must be included in any redistribution.
+ *
+ */
+
 #include "Adafruit_VL53L0X.h"
 
-#define VERSION_REQUIRED_MAJOR  1
-#define VERSION_REQUIRED_MINOR  0
-#define VERSION_REQUIRED_BUILD  1
+#define VERSION_REQUIRED_MAJOR  1 ///< Required sensor major version
+#define VERSION_REQUIRED_MINOR  0 ///< Required sensor minor version
+#define VERSION_REQUIRED_BUILD  1 ///< Required sensor build
 
-#define STR_HELPER( x ) #x
-#define STR( x )        STR_HELPER(x)
+#define STR_HELPER( x ) #x ///< a string helper
+#define STR( x )        STR_HELPER(x) ///< string helper wrapper
 
-
+/**************************************************************************/
+/*! 
+    @brief  Setups the I2C interface and hardware
+    @param  i2c_addr Optional I2C address the sensor can be found on. Default is 0x29
+    @param debug Optional debug flag. If true, debug information will print out via Serial.print during setup. Defaults to false.
+    @returns True if device is set up, false on any failure
+*/
+/**************************************************************************/
 boolean Adafruit_VL53L0X::begin(uint8_t i2c_addr, boolean debug ) {
   int32_t   status_int;
   int32_t   init_done         = 0;
@@ -138,6 +176,13 @@ boolean Adafruit_VL53L0X::begin(uint8_t i2c_addr, boolean debug ) {
   }
 }
 
+/**************************************************************************/
+/*! 
+    @brief  Change the I2C address of the sensor
+    @param  newAddr the new address to set the sensor to
+    @returns True if address was set successfully, False otherwise
+*/
+/**************************************************************************/
 boolean Adafruit_VL53L0X::setAddress(uint8_t newAddr) {
   newAddr &= 0x7F;
 
@@ -152,6 +197,14 @@ boolean Adafruit_VL53L0X::setAddress(uint8_t newAddr) {
   return false;
 }
 
+/**************************************************************************/
+/*! 
+    @brief  get a ranging measurement from the device
+    @param  RangingMeasurementData the pointer to the struct the data will be stored in
+    @param debug Optional debug flag. If true debug information will print via Serial.print during execution. Defaults to false.
+    @returns True if address was set successfully, False otherwise
+*/
+/**************************************************************************/
 VL53L0X_Error Adafruit_VL53L0X::getSingleRangingMeasurement( VL53L0X_RangingMeasurementData_t *RangingMeasurementData, boolean debug )
 {
     VL53L0X_Error   Status = VL53L0X_ERROR_NONE;
@@ -188,7 +241,12 @@ VL53L0X_Error Adafruit_VL53L0X::getSingleRangingMeasurement( VL53L0X_RangingMeas
 
 
 
-
+/**************************************************************************/
+/*! 
+    @brief  print a ranging measurement out via Serial.print in a human-readable format
+    @param pRangingMeasurementData a pointer to the ranging measurement data
+*/
+/**************************************************************************/
 void Adafruit_VL53L0X::printRangeStatus( VL53L0X_RangingMeasurementData_t* pRangingMeasurementData )
 {
     char buf[ VL53L0X_MAX_STRING_LENGTH ];
