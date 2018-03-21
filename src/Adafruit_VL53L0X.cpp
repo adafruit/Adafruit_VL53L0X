@@ -27,6 +27,7 @@
  *
  * BSD license, all text here must be included in any redistribution.
  *
+ * Updated by Andrew DeVries for Digital Example to include methods needed for Interrupt triggering
  */
 
 #include "Adafruit_VL53L0X.h"
@@ -239,6 +240,281 @@ VL53L0X_Error Adafruit_VL53L0X::getSingleRangingMeasurement( VL53L0X_RangingMeas
     return Status;
 }
 
+
+
+/**************************************************************************/
+VL53L0X_Error Adafruit_VL53L0X::startMeasurement( boolean debug )
+{
+    VL53L0X_Error   Status = VL53L0X_ERROR_NONE;
+
+    if( Status == VL53L0X_ERROR_NONE ) {
+        if( debug ) {
+            Serial.println( F( "sVL53L0X: StartMeasurement" ) );
+        }
+        Status = VL53L0X_StartMeasurement( pMyDevice);
+    }
+
+    return Status;
+}
+
+
+/**************************************************************************/
+VL53L0X_Error Adafruit_VL53L0X::stopMeasurement( boolean debug )
+{
+    VL53L0X_Error   Status = VL53L0X_ERROR_NONE;
+    if( Status == VL53L0X_ERROR_NONE ) {
+        if( debug ) {
+            Serial.println( F( "sVL53L0X: StopMeasurement" ) );
+        }
+        Status = VL53L0X_StopMeasurement( pMyDevice);
+    }
+
+    return Status;
+}
+
+
+/**************************************************************************/
+/*! 
+    @brief  set limit checking usefull when using intrupts and continous measuring ie using sensor to detect an object passing within range
+    @param  LimitCheckId the Limit to set VL53L0X_CHECKENABLE_SIGMA_FINAL_RANGE, VL53L0X_CHECKENABLE_SIGNAL_RATE_FINAL_RANGE, VL53L0X_CHECKENABLE_SIGNAL_REF_CLIP, VL53L0X_CHECKENABLE_RANGE_IGNORE_THRESHOLD, VL53L0X_CHECKENABLE_SIGNAL_RATE_MSRC, VL53L0X_CHECKENABLE_SIGNAL_RATE_PRE_RANGE
+    @param  LimitCheckEnable If 1 to enable 0 to disable.
+    @param debug Optional debug flag. If true debug information will print via Serial.print during execution. Defaults to false.
+    @returns VL53L0X_ERROR_NONE or Error if one occured
+*/
+
+/**************************************************************************/
+VL53L0X_Error Adafruit_VL53L0X::setLimitCheckEnable( uint8_t LimitCheckId, boolean LimitCheckEnable, boolean debug )
+{
+    VL53L0X_Error   Status = VL53L0X_ERROR_NONE;
+    uint16_t intLimitCheckId = LimitCheckId;
+    if( Status == VL53L0X_ERROR_NONE ) {
+        if( debug ) {
+            Serial.println( F( "sVL53L0X: SetLimitCheckEnable" ) );
+        }
+	   uint8_t intLimitCheckEnable;
+	   if(LimitCheckEnable == true){
+         	intLimitCheckEnable = 1;
+	   }else{
+	   	intLimitCheckEnable = 0;
+        }		 
+        Status = VL53L0X_SetLimitCheckEnable( pMyDevice, intLimitCheckId , intLimitCheckEnable );
+    }
+
+    return Status;
+}
+
+
+/**************************************************************************/
+boolean Adafruit_VL53L0X::getLimitCheckEnable( uint8_t LimitCheckId, boolean debug )
+{
+    VL53L0X_Error   Status = VL53L0X_ERROR_NONE;
+    uint16_t intLimitCheckId = LimitCheckId;
+    if( Status == VL53L0X_ERROR_NONE ) {
+        if( debug ) {
+            Serial.println( F( "sVL53L0X: getLimitCheckEnable" ) );
+        }
+	   uint8_t intLimitCheckEnable;
+	   
+        Status = VL53L0X_GetLimitCheckEnable( pMyDevice, intLimitCheckId , &intLimitCheckEnable );
+	   if(intLimitCheckEnable == 1){
+         	return true;
+	   }else{
+	   	return false;
+        }		 
+    }
+
+    return false;
+}
+
+
+/**************************************************************************/
+VL53L0X_Error Adafruit_VL53L0X::getLimitCheckCurrent( uint8_t LimitCheckId, FixPoint1616_t *pLimitCheckCurrent, boolean debug )
+{
+    VL53L0X_Error   Status = VL53L0X_ERROR_NONE;
+    uint16_t intLimitCheckId = LimitCheckId;
+
+    if( Status == VL53L0X_ERROR_NONE ) {
+        if( debug ) {
+            Serial.println( F( "sVL53L0X: getLimitCheckCurrent" ) );
+        }
+        Status = VL53L0X_GetLimitCheckCurrent( pMyDevice, intLimitCheckId , pLimitCheckCurrent);
+    }
+
+    return Status ;
+}
+
+
+
+/**************************************************************************/
+VL53L0X_Error Adafruit_VL53L0X::getLimitCheckValue( uint8_t LimitCheckId, FixPoint1616_t *pLimitCheckValue, boolean debug )
+{
+    VL53L0X_Error   Status = VL53L0X_ERROR_NONE;
+    uint16_t intLimitCheckId = LimitCheckId;
+
+    if( Status == VL53L0X_ERROR_NONE ) {
+        if( debug ) {
+            Serial.println( F( "sVL53L0X: getLimitCheckValue" ) );
+        }
+        Status = VL53L0X_GetLimitCheckValue( pMyDevice, intLimitCheckId , pLimitCheckValue);
+    }
+
+    return Status ;
+}
+
+/**************************************************************************/
+VL53L0X_Error Adafruit_VL53L0X::setLimitCheckValue( uint8_t LimitCheckId, FixPoint1616_t LimitCheckValue, boolean debug )
+{
+    VL53L0X_Error   Status = VL53L0X_ERROR_NONE;
+    uint16_t intLimitCheckId = LimitCheckId;
+    if( Status == VL53L0X_ERROR_NONE ) {
+        if( debug ) {
+            Serial.println( F( "sVL53L0X: setLimitCheckValue" ) );
+        }
+        Status = VL53L0X_SetLimitCheckValue( pMyDevice, intLimitCheckId, LimitCheckValue);
+    }
+
+    return Status ;
+}
+
+/**************************************************************************/
+VL53L0X_Error Adafruit_VL53L0X::setDeviceMode( VL53L0X_DeviceModes DeviceMode, boolean debug )
+{
+    VL53L0X_Error   Status = VL53L0X_ERROR_NONE;
+    if( Status == VL53L0X_ERROR_NONE ) {
+        if( debug ) {
+            Serial.println( F( "sVL53L0X: setDeviceMode" ) );
+        }
+        Status = VL53L0X_SetDeviceMode( pMyDevice, DeviceMode);
+    }
+
+    return Status ;
+}
+
+/**************************************************************************/
+VL53L0X_Error Adafruit_VL53L0X::setInterruptThresholds(FixPoint1616_t ThresholdLow, FixPoint1616_t ThresholdHigh, boolean debug )
+{
+    VL53L0X_Error   Status = VL53L0X_ERROR_NONE;
+    if( Status == VL53L0X_ERROR_NONE ) {
+        if( debug ) {
+            Serial.println( F( "sVL53L0X: setInterruptThresholds" ) );
+        }
+	   //ST API Comments "no dependency on DeviceMode for Ewok " so device mode not used but API requires something so pass in VL53L0X_DEVICEMODE_CONTINUOUS_RANGING even though not used
+        Status = VL53L0X_SetInterruptThresholds( pMyDevice, VL53L0X_DEVICEMODE_CONTINUOUS_RANGING, ThresholdLow, ThresholdHigh  );
+    }
+
+    return Status ;
+}
+
+VL53L0X_Error Adafruit_VL53L0X::getInterruptThresholds(FixPoint1616_t *pThresholdLow, FixPoint1616_t *pThresholdHigh, boolean debug )
+{
+    VL53L0X_Error   Status = VL53L0X_ERROR_NONE;
+    if( Status == VL53L0X_ERROR_NONE ) {
+        if( debug ) {
+            Serial.println( F( "sVL53L0X: getInterruptThresholds" ) );
+        }
+	   //ST API Comments "no dependency on DeviceMode for Ewok " so device mode not used but API requires something so pass in VL53L0X_DEVICEMODE_CONTINUOUS_RANGING even though not used
+        Status = VL53L0X_GetInterruptThresholds( pMyDevice, VL53L0X_DEVICEMODE_CONTINUOUS_RANGING, pThresholdLow, pThresholdHigh  );
+    }
+
+    return Status ;
+}
+
+
+/**************************************************************************/
+VL53L0X_Error Adafruit_VL53L0X::getDeviceMode(VL53L0X_DeviceModes *pDeviceMode, boolean debug )
+{
+    VL53L0X_Error   Status = VL53L0X_ERROR_NONE;
+    if( Status == VL53L0X_ERROR_NONE ) {
+        if( debug ) {
+            Serial.println( F( "sVL53L0X: getDeviceMode" ) );
+        }
+        Status = VL53L0X_GetDeviceMode( pMyDevice, pDeviceMode);
+    }
+
+    return Status ;
+}
+
+/**************************************************************************/
+VL53L0X_Error Adafruit_VL53L0X::clearInterruptMask(boolean debug )
+{
+    VL53L0X_Error   Status = VL53L0X_ERROR_NONE;
+    if( Status == VL53L0X_ERROR_NONE ) {
+        if( debug ) {
+            Serial.println( F( "sVL53L0X: clearInterruptMask" ) );
+        }
+        Status = VL53L0X_ClearInterruptMask( pMyDevice, 0);
+    }
+
+    return Status ;
+}
+
+VL53L0X_Error Adafruit_VL53L0X::setGpioConfig(VL53L0X_DeviceModes DeviceMode, VL53L0X_GpioFunctionality Functionality, VL53L0X_InterruptPolarity Polarity, boolean debug )
+{
+    VL53L0X_Error   Status = VL53L0X_ERROR_NONE;
+    if( Status == VL53L0X_ERROR_NONE ) {
+        if( debug ) {
+            Serial.println( F( "sVL53L0X: setGpioConfig" ) );
+        }
+	   //  Pin is always 0, Devicemode is ignored if not VL53L0X_DEVICEMODE_GPIO_DRIVE or VL53L0X_DEVICEMODE_GPIO_OSC
+        Status = VL53L0X_SetGpioConfig( pMyDevice, 0, DeviceMode, Functionality, Polarity);
+    }
+
+    return Status ;
+}
+
+VL53L0X_Error Adafruit_VL53L0X::getGpioConfig(VL53L0X_DeviceModes *pDeviceMode,	VL53L0X_GpioFunctionality *pFunctionality,	VL53L0X_InterruptPolarity *pPolarity, boolean debug )
+{
+    VL53L0X_Error   Status = VL53L0X_ERROR_NONE;
+    if( Status == VL53L0X_ERROR_NONE ) {
+        if( debug ) {
+            Serial.println( F( "sVL53L0X: getGpioConfig" ) );
+        }
+	   //  Pin is always 0, Devicemode is ignored if not VL53L0X_DEVICEMODE_GPIO_DRIVE or VL53L0X_DEVICEMODE_GPIO_OSC
+
+        Status = VL53L0X_GetGpioConfig( pMyDevice, 0, pDeviceMode, pFunctionality, pPolarity);
+    }
+
+    return Status ;
+}
+
+
+
+/**************************************************************************/
+/*! 
+    @brief  get a ranging measurement from the device
+    @param  RangingMeasurementData the pointer to the struct the data will be stored in
+    @param debug Optional debug flag. If true debug information will print via Serial.print during execution. Defaults to false.
+    @returns VL53L0X_ERROR_NONE or Error if one occured
+*/
+/**************************************************************************/
+VL53L0X_Error Adafruit_VL53L0X::getRangingMeasurement( VL53L0X_RangingMeasurementData_t *RangingMeasurementData, boolean debug )
+{
+    VL53L0X_Error   Status = VL53L0X_ERROR_NONE;
+    FixPoint1616_t  LimitCheckCurrent;
+
+    if( Status == VL53L0X_ERROR_NONE ) {
+        if( debug ) {
+            Serial.println( F( "sVL53L0X: getRangingMeasurement" ) );
+        }
+        Status = VL53L0X_GetRangingMeasurementData( pMyDevice, RangingMeasurementData );
+
+        if( debug ) {
+            printRangeStatus( RangingMeasurementData );
+        }
+
+        if( debug ) {
+            VL53L0X_GetLimitCheckCurrent( pMyDevice, VL53L0X_CHECKENABLE_RANGE_IGNORE_THRESHOLD, &LimitCheckCurrent );
+
+          	Serial.print( F( "RANGE IGNORE THRESHOLD: " ) );
+          	Serial.println( (float)LimitCheckCurrent / 65536.0 );
+
+          	Serial.print( F( "Measured distance: " ) );
+          	Serial.println( RangingMeasurementData->RangeMilliMeter );
+        }
+    }
+
+    return Status;
+}
 
 
 /**************************************************************************/
