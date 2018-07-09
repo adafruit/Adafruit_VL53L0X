@@ -52,7 +52,7 @@ class Adafruit_VL53L0X
     VL53L0X_Error 
       rangingTest(VL53L0X_RangingMeasurementData_t* pRangingMeasurementData, 
 		  boolean debug = false) 
-    { getSingleRangingMeasurement(pRangingMeasurementData, debug); };
+    { return getSingleRangingMeasurement(pRangingMeasurementData, debug); };
 
     VL53L0X_Error getSingleRangingMeasurement( VL53L0X_RangingMeasurementData_t* pRangingMeasurementData, boolean debug = false );
     void          printRangeStatus( VL53L0X_RangingMeasurementData_t* pRangingMeasurementData );
