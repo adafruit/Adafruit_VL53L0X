@@ -47,8 +47,6 @@
 */
 /**************************************************************************/
 boolean Adafruit_VL53L0X::begin(uint8_t i2c_addr, boolean debug ) {
-  int32_t   status_int;
-  int32_t   init_done         = 0;
 
   uint32_t  refSpadCount;
   uint8_t   isApertureSpads;
