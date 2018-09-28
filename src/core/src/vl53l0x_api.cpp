@@ -28,12 +28,12 @@
 
 #define USE_I2C_2V8
 
-#include "vl53l0x_api.h"
-#include "vl53l0x_tuning.h"
-#include "vl53l0x_interrupt_threshold_settings.h"
-#include "vl53l0x_api_core.h"
-#include "vl53l0x_api_calibration.h"
-#include "vl53l0x_api_strings.h"
+#include "../../vl53l0x_api.h"
+#include "../../vl53l0x_tuning.h"
+#include "../../vl53l0x_interrupt_threshold_settings.h"
+#include "../../vl53l0x_api_core.h"
+#include "../../vl53l0x_api_calibration.h"
+#include "../../vl53l0x_api_strings.h"
 
 #ifndef __KERNEL__
 #include <stdlib.h>
