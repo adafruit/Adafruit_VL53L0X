@@ -47,8 +47,6 @@
 */
 /**************************************************************************/
 boolean Adafruit_VL53L0X::begin(uint8_t i2c_addr, boolean debug ) {
-  int32_t   status_int;
-  int32_t   init_done         = 0;
 
   uint32_t  refSpadCount;
   uint8_t   isApertureSpads;
@@ -265,4 +263,23 @@ void Adafruit_VL53L0X::printRangeStatus( VL53L0X_RangingMeasurementData_t* pRang
     Serial.print( F( " : " ) );
     Serial.println( buf );
 
+}
+
+
+/**************************************************************************/
+/*!
+    @brief  print a PAL error code out via Serial.print in a human-readable format
+    @param PalErrorCode the error code to print
+*/
+/**************************************************************************/
+void Adafruit_VL53L0X::printPalErrorString( VL53L0X_Error PalErrorCode )
+{
+    char buf[ VL53L0X_MAX_STRING_LENGTH ];
+
+    VL53L0X_GetPalErrorString( PalErrorCode, buf );
+
+    Serial.print( F("PalErrorCode: " ) );
+    Serial.print( PalErrorCode );
+    Serial.print( F( " : " ) );
+    Serial.println( buf );
 }
