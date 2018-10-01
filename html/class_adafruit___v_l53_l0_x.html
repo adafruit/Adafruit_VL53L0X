@@ -74,9 +74,9 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:abd84b7f458055fe0ba1957dcde4e3cf1"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___v_l53_l0_x.html#abd84b7f458055fe0ba1957dcde4e3cf1">begin</a> (uint8_t i2c_addr=<a class="el" href="_adafruit___v_l53_l0_x_8h.html#aa3d2ea7cd75ee455dcb85da71c4a2af2">VL53L0X_I2C_ADDR</a>, boolean debug=false)</td></tr>
-<tr class="memdesc:abd84b7f458055fe0ba1957dcde4e3cf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setups the I2C interface and hardware.  <a href="#abd84b7f458055fe0ba1957dcde4e3cf1">More...</a><br /></td></tr>
-<tr class="separator:abd84b7f458055fe0ba1957dcde4e3cf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad11b480ce425b462b1251636580f838a"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___v_l53_l0_x.html#ad11b480ce425b462b1251636580f838a">begin</a> (uint8_t i2c_addr=<a class="el" href="_adafruit___v_l53_l0_x_8h.html#aa3d2ea7cd75ee455dcb85da71c4a2af2">VL53L0X_I2C_ADDR</a>, boolean debug=false, TwoWire *i2c=&amp;Wire)</td></tr>
+<tr class="memdesc:ad11b480ce425b462b1251636580f838a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setups the I2C interface and hardware.  <a href="#ad11b480ce425b462b1251636580f838a">More...</a><br /></td></tr>
+<tr class="separator:ad11b480ce425b462b1251636580f838a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac09f695fcdfe6adf725a7cf24fdc2fe5"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___v_l53_l0_x.html#ac09f695fcdfe6adf725a7cf24fdc2fe5">setAddress</a> (uint8_t newAddr)</td></tr>
 <tr class="memdesc:ac09f695fcdfe6adf725a7cf24fdc2fe5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change the I2C address of the sensor.  <a href="#ac09f695fcdfe6adf725a7cf24fdc2fe5">More...</a><br /></td></tr>
 <tr class="separator:ac09f695fcdfe6adf725a7cf24fdc2fe5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -100,8 +100,8 @@ VL53L0X_Error&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class that stores state and functions for interacting with VL53L0X time-of-flight sensor chips. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="abd84b7f458055fe0ba1957dcde4e3cf1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abd84b7f458055fe0ba1957dcde4e3cf1">&#9670;&nbsp;</a></span>begin()</h2>
+<a id="ad11b480ce425b462b1251636580f838a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad11b480ce425b462b1251636580f838a">&#9670;&nbsp;</a></span>begin()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -116,7 +116,13 @@ VL53L0X_Error&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">boolean&#160;</td>
-          <td class="paramname"><em>debug</em> = <code>false</code>&#160;</td>
+          <td class="paramname"><em>debug</em> = <code>false</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TwoWire *&#160;</td>
+          <td class="paramname"><em>i2c</em> = <code>&amp;Wire</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -131,6 +137,7 @@ VL53L0X_Error&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
   <table class="params">
     <tr><td class="paramname">i2c_addr</td><td>Optional I2C address the sensor can be found on. Default is 0x29 </td></tr>
     <tr><td class="paramname">debug</td><td>Optional debug flag. If true, debug information will print out via Serial.print during setup. Defaults to false. </td></tr>
+    <tr><td class="paramname">i2c</td><td>Optional I2C bus the sensor is located on. Default is Wire </td></tr>
   </table>
   </dd>
 </dl>
