@@ -43,6 +43,7 @@
     @brief  Setups the I2C interface and hardware
     @param  i2c_addr Optional I2C address the sensor can be found on. Default is 0x29
     @param debug Optional debug flag. If true, debug information will print out via Serial.print during setup. Defaults to false.
+    @param  i2c Optional I2C bus the sensor is located on. Default is Wire
     @returns True if device is set up, false on any failure
 */
 /**************************************************************************/
