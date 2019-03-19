@@ -47,7 +47,7 @@
     @returns True if device is set up, false on any failure
 */
 /**************************************************************************/
-boolean Adafruit_VL53L0X::begin(uint8_t i2c_addr, boolean debug, TwoWire *i2c, boolean continuous) {
+boolean Adafruit_VL53L0X::begin(uint8_t i2c_addr, boolean debug, TwoWire *i2c) {
   int32_t   status_int;
   int32_t   init_done         = 0;
 
@@ -56,7 +56,7 @@ boolean Adafruit_VL53L0X::begin(uint8_t i2c_addr, boolean debug, TwoWire *i2c, b
   uint8_t   VhvSettings;
   uint8_t   PhaseCal;
 
-  pIsContinuous = continuous;
+  pIsContinuous = false;
   // Initialize Comms
   pMyDevice->I2cDevAddr      =  VL53L0X_I2C_ADDR;  // default
   pMyDevice->comms_type      =  1;
@@ -147,12 +147,7 @@ boolean Adafruit_VL53L0X::begin(uint8_t i2c_addr, boolean debug, TwoWire *i2c, b
           Serial.println( F( "VL53L0X: SetDeviceMode" ) );
       }
 
-      if(pIsContinuous)
-      {
-        Status = VL53L0X_SetDeviceMode( pMyDevice, VL53L0X_DEVICEMODE_CONTINUOUS_RANGING );        // Setup in continuous ranging mode
-      } else {
-        Status = VL53L0X_SetDeviceMode( pMyDevice, VL53L0X_DEVICEMODE_SINGLE_RANGING );        // Setup in single ranging mode
-      }
+      Status = VL53L0X_SetDeviceMode( pMyDevice, VL53L0X_DEVICEMODE_SINGLE_RANGING );        // Setup in single ranging mode
   }
 
   // Enable/Disable Sigma and Signal check
@@ -170,13 +165,6 @@ boolean Adafruit_VL53L0X::begin(uint8_t i2c_addr, boolean debug, TwoWire *i2c, b
 
   if( Status == VL53L0X_ERROR_NONE ) {
       Status = VL53L0X_SetLimitCheckValue( pMyDevice, VL53L0X_CHECKENABLE_RANGE_IGNORE_THRESHOLD, (FixPoint1616_t)( 1.5 * 0.023 * 65536 ) );
-  }
-
-  if( pIsContinuous )
-  {
-    if( Status == VL53L0X_ERROR_NONE ) {
-      Status = VL53L0X_StartMeasurement(pMyDevice);
-    }
   }
 
   if( Status == VL53L0X_ERROR_NONE ) {
@@ -213,7 +201,30 @@ boolean Adafruit_VL53L0X::setAddress(uint8_t newAddr) {
 }
 
 /**************************************************************************/
-/*! 
+/*!
+    @brief  Change the mode of this device to continuous recording from single shot.
+    @param  continuous selection flag. If true the mode is changed to continuous recording
+    @returns True if mode was changed to continuous successfully, False otherwise
+*/
+/**************************************************************************/
+VL53L0X_Error Adafruit_VL53L0X::setContinuous(boolean continuous) {
+  pIsContinuous = continuous;
+
+  if(pIsContinuous)
+  {
+    Status = VL53L0X_SetDeviceMode( pMyDevice, VL53L0X_DEVICEMODE_CONTINUOUS_RANGING );        // Setup in continuous ranging mode
+    if( Status == VL53L0X_ERROR_NONE ) {
+      Status = VL53L0X_StartMeasurement(pMyDevice);
+    }
+  } else {
+    Status = VL53L0X_SetDeviceMode( pMyDevice, VL53L0X_DEVICEMODE_SINGLE_RANGING );        // Setup in single ranging mode
+  }
+  return Status;
+}
+
+
+/**************************************************************************/
+/*!
     @brief  get a ranging measurement from the device
     @param  RangingMeasurementData the pointer to the struct the data will be stored in
     @param debug Optional debug flag. If true debug information will print via Serial.print during execution. Defaults to false.
