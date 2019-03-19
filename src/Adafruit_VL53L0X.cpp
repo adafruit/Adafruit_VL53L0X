@@ -47,7 +47,7 @@
     @returns True if device is set up, false on any failure
 */
 /**************************************************************************/
-boolean Adafruit_VL53L0X::begin(uint8_t i2c_addr, boolean debug, TwoWire *i2c) {
+boolean Adafruit_VL53L0X::begin(uint8_t i2c_addr, boolean debug, TwoWire *i2c, boolean continuous) {
   int32_t   status_int;
   int32_t   init_done         = 0;
 
@@ -56,6 +56,7 @@ boolean Adafruit_VL53L0X::begin(uint8_t i2c_addr, boolean debug, TwoWire *i2c) {
   uint8_t   VhvSettings;
   uint8_t   PhaseCal;
 
+  pIsContinuous = continuous;
   // Initialize Comms
   pMyDevice->I2cDevAddr      =  VL53L0X_I2C_ADDR;  // default
   pMyDevice->comms_type      =  1;
@@ -146,7 +147,12 @@ boolean Adafruit_VL53L0X::begin(uint8_t i2c_addr, boolean debug, TwoWire *i2c) {
           Serial.println( F( "VL53L0X: SetDeviceMode" ) );
       }
 
-      Status = VL53L0X_SetDeviceMode( pMyDevice, VL53L0X_DEVICEMODE_SINGLE_RANGING );        // Setup in single ranging mode
+      if(pIsContinuous)
+      {
+        Status = VL53L0X_SetDeviceMode( pMyDevice, VL53L0X_DEVICEMODE_CONTINUOUS_RANGING );        // Setup in continuous ranging mode
+      } else {
+        Status = VL53L0X_SetDeviceMode( pMyDevice, VL53L0X_DEVICEMODE_SINGLE_RANGING );        // Setup in single ranging mode
+      }
   }
 
   // Enable/Disable Sigma and Signal check
@@ -164,6 +170,13 @@ boolean Adafruit_VL53L0X::begin(uint8_t i2c_addr, boolean debug, TwoWire *i2c) {
 
   if( Status == VL53L0X_ERROR_NONE ) {
       Status = VL53L0X_SetLimitCheckValue( pMyDevice, VL53L0X_CHECKENABLE_RANGE_IGNORE_THRESHOLD, (FixPoint1616_t)( 1.5 * 0.023 * 65536 ) );
+  }
+
+  if( pIsContinuous )
+  {
+    if( Status == VL53L0X_ERROR_NONE ) {
+      Status = VL53L0X_StartMeasurement(pMyDevice);
+    }
   }
 
   if( Status == VL53L0X_ERROR_NONE ) {
@@ -219,9 +232,20 @@ VL53L0X_Error Adafruit_VL53L0X::getSingleRangingMeasurement( VL53L0X_RangingMeas
 
     if( Status == VL53L0X_ERROR_NONE ) {
         if( debug ) {
+          if (pIsContinuous)
+          {
+            Serial.println( F( "sVL53L0X: GetRangingMeasurementData" ) );
+          } else {
             Serial.println( F( "sVL53L0X: PerformSingleRangingMeasurement" ) );
+          }
         }
-        Status = VL53L0X_PerformSingleRangingMeasurement( pMyDevice, RangingMeasurementData );
+
+        if (pIsContinuous)
+        {
+          Status = VL53L0X_GetRangingMeasurementData( pMyDevice, RangingMeasurementData );
+        } else {
+          Status = VL53L0X_PerformSingleRangingMeasurement( pMyDevice, RangingMeasurementData );
+        }
 
         if( debug ) {
             printRangeStatus( RangingMeasurementData );
