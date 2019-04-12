@@ -38,7 +38,7 @@
 class Adafruit_VL53L0X
 {
   public:
-    boolean       begin(uint8_t i2c_addr = VL53L0X_I2C_ADDR, boolean debug = false );
+    boolean       begin(uint8_t i2c_addr = VL53L0X_I2C_ADDR, boolean debug = false, TwoWire *i2c = &Wire);
     boolean       setAddress(uint8_t newAddr);
 
     /**************************************************************************/

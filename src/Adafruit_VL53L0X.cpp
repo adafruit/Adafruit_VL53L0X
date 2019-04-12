@@ -43,10 +43,11 @@
     @brief  Setups the I2C interface and hardware
     @param  i2c_addr Optional I2C address the sensor can be found on. Default is 0x29
     @param debug Optional debug flag. If true, debug information will print out via Serial.print during setup. Defaults to false.
+    @param  i2c Optional I2C bus the sensor is located on. Default is Wire
     @returns True if device is set up, false on any failure
 */
 /**************************************************************************/
-boolean Adafruit_VL53L0X::begin(uint8_t i2c_addr, boolean debug ) {
+boolean Adafruit_VL53L0X::begin(uint8_t i2c_addr, boolean debug, TwoWire *i2c) {
   int32_t   status_int;
   int32_t   init_done         = 0;
 
@@ -59,8 +60,9 @@ boolean Adafruit_VL53L0X::begin(uint8_t i2c_addr, boolean debug ) {
   pMyDevice->I2cDevAddr      =  VL53L0X_I2C_ADDR;  // default
   pMyDevice->comms_type      =  1;
   pMyDevice->comms_speed_khz =  400;
+  pMyDevice->i2c = i2c;
 
-  Wire.begin();     // VL53L0X_i2c_init();
+  pMyDevice->i2c->begin();     // VL53L0X_i2c_init();
 
   // unclear if this is even needed:
   if( VL53L0X_IMPLEMENTATION_VER_MAJOR != VERSION_REQUIRED_MAJOR ||
