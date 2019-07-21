@@ -3,7 +3,7 @@ range measurements with the VL53L0X and display on a SSD1306 OLED.
 
 The range readings are in units of mm. */
 
-#include <Wire.h>
+#include <SoftWire.h>
 #include "Adafruit_VL53L0X.h"
 #include <SPI.h>
 #include <Adafruit_GFX.h>
@@ -20,13 +20,13 @@ Adafruit_VL53L0X lox = Adafruit_VL53L0X();
 void setup()
 {
   Serial.begin(9600);
-    
+
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);  // initialize with the I2C addr 0x3C (for the 128x32)
   // init done
   display.display();
   delay(1000);
-    
-  
+
+
   Wire.begin();
 
   if (!lox.begin()) {
