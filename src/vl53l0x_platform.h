@@ -26,13 +26,12 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ********************************************************************************/
 
-
 #ifndef _VL53L0X_PLATFORM_H_
 #define _VL53L0X_PLATFORM_H_
 
 #include "vl53l0x_def.h"
-#include "vl53l0x_platform_log.h"
 #include "vl53l0x_i2c_platform.h"
+#include "vl53l0x_platform_log.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -43,7 +42,7 @@ extern "C" {
  *
  * @brief All end user OS/platform/application porting
  */
- 
+
 /**
  * @defgroup VL53L0X_platform_group VL53L0 Platform Functions
  * @brief    VL53L0 Platform Functions
@@ -52,27 +51,29 @@ extern "C" {
 
 /**
  * @struct  VL53L0X_Dev_t
- * @brief    Generic PAL device type that does link between API and platform abstraction layer
+ * @brief    Generic PAL device type that does link between API and platform
+ * abstraction layer
  *
  */
 typedef struct {
-    VL53L0X_DevData_t Data;               /*!< embed ST Ewok Dev  data as "Data"*/
+  VL53L0X_DevData_t Data; /*!< embed ST Ewok Dev  data as "Data"*/
 
-    /*!< user specific field */
-    uint8_t   I2cDevAddr;                /*!< i2c device address user specific field */
-    uint8_t   comms_type;                /*!< Type of comms : VL53L0X_COMMS_I2C or VL53L0X_COMMS_SPI */
-    uint16_t  comms_speed_khz;           /*!< Comms speed [kHz] : typically 400kHz for I2C           */
-    
-    TwoWire   *i2c;
+  /*!< user specific field */
+  uint8_t I2cDevAddr; /*!< i2c device address user specific field */
+  uint8_t
+      comms_type; /*!< Type of comms : VL53L0X_COMMS_I2C or VL53L0X_COMMS_SPI */
+  uint16_t comms_speed_khz; /*!< Comms speed [kHz] : typically 400kHz for I2C */
+
+  TwoWire *i2c;
 
 } VL53L0X_Dev_t;
 
-
 /**
- * @brief   Declare the device Handle as a pointer of the structure @a VL53L0X_Dev_t.
+ * @brief   Declare the device Handle as a pointer of the structure @a
+ * VL53L0X_Dev_t.
  *
  */
-typedef VL53L0X_Dev_t* VL53L0X_DEV;
+typedef VL53L0X_Dev_t *VL53L0X_DEV;
 
 /**
  * @def PALDevDataGet
@@ -81,7 +82,8 @@ typedef VL53L0X_Dev_t* VL53L0X_DEV;
  * @param Dev       Device Handle
  * @param field     ST structure field name
  * It maybe used and as real data "ref" not just as "get" for sub-structure item
- * like PALDevDataGet(FilterData.field)[i] or PALDevDataGet(FilterData.MeasurementIndex)++
+ * like PALDevDataGet(FilterData.field)[i] or
+ * PALDevDataGet(FilterData.MeasurementIndex)++
  */
 #define PALDevDataGet(Dev, field) (Dev->Data.field)
 
@@ -92,8 +94,7 @@ typedef VL53L0X_Dev_t* VL53L0X_DEV;
  * @param field     ST structure field name
  * @param data      Data to be set
  */
-#define PALDevDataSet(Dev, field, data) (Dev->Data.field)=(data)
-
+#define PALDevDataSet(Dev, field, data) (Dev->Data.field) = (data)
 
 /**
  * @defgroup VL53L0X_registerAccess_group PAL Register Access Functions
@@ -102,7 +103,8 @@ typedef VL53L0X_Dev_t* VL53L0X_DEV;
  */
 
 /**
- * Lock comms interface to serialize all commands to a shared I2C interface for a specific device
+ * Lock comms interface to serialize all commands to a shared I2C interface for
+ * a specific device
  * @param   Dev       Device Handle
  * @return  VL53L0X_ERROR_NONE        Success
  * @return  "Other error code"    See ::VL53L0X_Error
@@ -110,24 +112,26 @@ typedef VL53L0X_Dev_t* VL53L0X_DEV;
 VL53L0X_Error VL53L0X_LockSequenceAccess(VL53L0X_DEV Dev);
 
 /**
- * Unlock comms interface to serialize all commands to a shared I2C interface for a specific device
+ * Unlock comms interface to serialize all commands to a shared I2C interface
+ * for a specific device
  * @param   Dev       Device Handle
  * @return  VL53L0X_ERROR_NONE        Success
  * @return  "Other error code"    See ::VL53L0X_Error
  */
 VL53L0X_Error VL53L0X_UnlockSequenceAccess(VL53L0X_DEV Dev);
 
-
 /**
  * Writes the supplied byte buffer to the device
  * @param   Dev       Device Handle
  * @param   index     The register index
- * @param   pdata     Pointer to uint8_t buffer containing the data to be written
+ * @param   pdata     Pointer to uint8_t buffer containing the data to be
+ * written
  * @param   count     Number of bytes in the supplied byte buffer
  * @return  VL53L0X_ERROR_NONE        Success
  * @return  "Other error code"    See ::VL53L0X_Error
  */
-VL53L0X_Error VL53L0X_WriteMulti(VL53L0X_DEV Dev, uint8_t index, uint8_t *pdata, uint32_t count);
+VL53L0X_Error VL53L0X_WriteMulti(VL53L0X_DEV Dev, uint8_t index, uint8_t *pdata,
+                                 uint32_t count);
 
 /**
  * Reads the requested number of bytes from the device
@@ -138,7 +142,8 @@ VL53L0X_Error VL53L0X_WriteMulti(VL53L0X_DEV Dev, uint8_t index, uint8_t *pdata,
  * @return  VL53L0X_ERROR_NONE        Success
  * @return  "Other error code"    See ::VL53L0X_Error
  */
-VL53L0X_Error VL53L0X_ReadMulti(VL53L0X_DEV Dev, uint8_t index, uint8_t *pdata, uint32_t count);
+VL53L0X_Error VL53L0X_ReadMulti(VL53L0X_DEV Dev, uint8_t index, uint8_t *pdata,
+                                uint32_t count);
 
 /**
  * Write single byte register
@@ -212,16 +217,17 @@ VL53L0X_Error VL53L0X_RdDWord(VL53L0X_DEV Dev, uint8_t index, uint32_t *data);
  * @return  VL53L0X_ERROR_NONE        Success
  * @return  "Other error code"    See ::VL53L0X_Error
  */
-VL53L0X_Error VL53L0X_UpdateByte(VL53L0X_DEV Dev, uint8_t index, uint8_t AndData, uint8_t OrData);
+VL53L0X_Error VL53L0X_UpdateByte(VL53L0X_DEV Dev, uint8_t index,
+                                 uint8_t AndData, uint8_t OrData);
 
 /** @} end of VL53L0X_registerAccess_group */
 
-    
 /**
  * @brief execute delay in all polling API call
  *
- * A typical multi-thread or RTOs implementation is to sleep the task for some 5ms (with 100Hz max rate faster polling is not needed)
- * if nothing specific is need you can define it as an empty/void macro
+ * A typical multi-thread or RTOs implementation is to sleep the task for some
+ * 5ms (with 100Hz max rate faster polling is not needed) if nothing specific is
+ * need you can define it as an empty/void macro
  * @code
  * #define VL53L0X_PollingDelay(...) (void)0
  * @endcode
@@ -229,7 +235,8 @@ VL53L0X_Error VL53L0X_UpdateByte(VL53L0X_DEV Dev, uint8_t index, uint8_t AndData
  * @return  VL53L0X_ERROR_NONE        Success
  * @return  "Other error code"    See ::VL53L0X_Error
  */
-VL53L0X_Error VL53L0X_PollingDelay(VL53L0X_DEV Dev); /* usually best implemented as a real function */
+VL53L0X_Error VL53L0X_PollingDelay(
+    VL53L0X_DEV Dev); /* usually best implemented as a real function */
 
 /** @} end of VL53L0X_platform_group */
 
@@ -237,7 +244,4 @@ VL53L0X_Error VL53L0X_PollingDelay(VL53L0X_DEV Dev); /* usually best implemented
 }
 #endif
 
-#endif  /* _VL53L0X_PLATFORM_H_ */
-
-
-
+#endif /* _VL53L0X_PLATFORM_H_ */
