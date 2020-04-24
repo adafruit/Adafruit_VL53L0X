@@ -52,7 +52,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #error "Error NULL definition should be done. Please add required include "
 #endif
 
-#if !defined(STDINT_H) && !defined(_GCC_STDINT_H) &&                           \
+#if !defined(STDINT_H) && !defined(_STDINT_H) && !defined(_GCC_STDINT_H) &&    \
     !defined(__STDINT_DECLS) && !defined(_GCC_WRAP_STDINT_H)
 
 #pragma message(                                                               \
