@@ -71,8 +71,6 @@ public:
 private:
   VL53L0X_Dev_t MyDevice;
   VL53L0X_Dev_t *pMyDevice = &MyDevice;
-  VL53L0X_Version_t Version;
-  VL53L0X_Version_t *pVersion = &Version;
   VL53L0X_DeviceInfo_t DeviceInfo;
 };
 
