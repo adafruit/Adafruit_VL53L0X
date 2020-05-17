@@ -104,7 +104,7 @@ boolean Adafruit_VL53L0X::begin(uint8_t i2c_addr, boolean debug, TwoWire *i2c) {
       Serial.println(DeviceInfo.ProductRevisionMinor);
     }
 
-    if ((DeviceInfo.ProductRevisionMajor != 1) &&
+    if ((DeviceInfo.ProductRevisionMajor != 1) ||
         (DeviceInfo.ProductRevisionMinor != 1)) {
       if (debug) {
         Serial.print(F("Error expected cut 1.1 but found "));
