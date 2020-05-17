@@ -50,10 +50,10 @@
 */
 /**************************************************************************/
 boolean Adafruit_VL53L0X::begin(uint8_t i2c_addr, boolean debug, TwoWire *i2c) {
-  uint32_t  refSpadCount;
-  uint8_t   isApertureSpads;
-  uint8_t   VhvSettings;
-  uint8_t   PhaseCal;
+  uint32_t refSpadCount;
+  uint8_t isApertureSpads;
+  uint8_t VhvSettings;
+  uint8_t PhaseCal;
 
   // Initialize Comms
   pMyDevice->I2cDevAddr = VL53L0X_I2C_ADDR; // default
