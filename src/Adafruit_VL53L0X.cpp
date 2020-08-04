@@ -30,6 +30,7 @@
  */
 
 #include "Adafruit_VL53L0X.h"
+#include "vl53l0x_api_core.h"
 
 #define VERSION_REQUIRED_MAJOR 1 ///< Required sensor major version
 #define VERSION_REQUIRED_MINOR 0 ///< Required sensor minor version
@@ -287,4 +288,158 @@ void Adafruit_VL53L0X::printRangeStatus(
   Serial.print(RangeStatus);
   Serial.print(F(" : "));
   Serial.println(buf);
+}
+
+/**************************************************************************/
+/*!
+    @brief  Single shot ranging. Be sure to check the return of {@link
+   readRangeStatus} to before using the return value!
+    @return Distance in millimeters if valid
+*/
+/**************************************************************************/
+
+uint16_t Adafruit_VL53L0X::readRange(void) {
+  Status = VL53L0X_PerformSingleRangingMeasurement(pMyDevice, &_measure);
+
+  if (Status == VL53L0X_ERROR_NONE)
+    return _measure.RangeMilliMeter;
+  // Other status return something totally out of bounds...
+  return 0xffff;
+}
+
+/**************************************************************************/
+/*!
+    @brief  Request ranging success/error message (retreive after ranging)
+    @returns One of possible VL6180X_ERROR_* values
+*/
+/**************************************************************************/
+
+uint8_t Adafruit_VL53L0X::readRangeStatus(void) { return _measure.RangeStatus; }
+
+/**************************************************************************/
+/*!
+    @brief  Start a range operation
+    @return true if range operation successfully started.
+*/
+/**************************************************************************/
+
+boolean Adafruit_VL53L0X::startRange(void) {
+
+  /* This function will do a complete single ranging
+   * Here we fix the mode! */
+  // first lets set the device in SINGLE_Ranging mode
+  _last_status =
+      VL53L0X_SetDeviceMode(pMyDevice, VL53L0X_DEVICEMODE_SINGLE_RANGING);
+
+  if (_last_status == VL53L0X_ERROR_NONE) {
+    // Lets start up the measurement
+    _last_status = VL53L0X_StartMeasurement(pMyDevice);
+  }
+  return (_last_status == VL53L0X_ERROR_NONE);
+}
+
+/**************************************************************************/
+/*!
+    @brief  Checks to see if a range operation has completed
+    @return true if range operation completed or an error has happened
+*/
+/**************************************************************************/
+
+boolean Adafruit_VL53L0X::isRangeComplete(void) {
+  uint8_t NewDataReady = 0;
+  _last_status = VL53L0X_GetMeasurementDataReady(pMyDevice, &NewDataReady);
+  return ((_last_status != VL53L0X_ERROR_NONE) || (NewDataReady == 1));
+}
+
+/**************************************************************************/
+/*!
+    @brief  Wait until Range operation has completed.
+    @return true if range operation completed, false if error.
+*/
+/**************************************************************************/
+
+boolean Adafruit_VL53L0X::waitRangeComplete(void) {
+  _last_status = VL53L0X_measurement_poll_for_completion(pMyDevice);
+
+  return (_last_status == VL53L0X_ERROR_NONE);
+}
+
+/**************************************************************************/
+/*!
+    @brief  Return the range in mm for the last operation.
+    @return Range in mm.
+*/
+/**************************************************************************/
+
+uint16_t Adafruit_VL53L0X::readRangeResult(void) {
+  _last_status = VL53L0X_GetRangingMeasurementData(pMyDevice, &_measure);
+
+  if (_last_status == VL53L0X_ERROR_NONE)
+    _last_status = VL53L0X_ClearInterruptMask(pMyDevice, 0);
+
+  if ((_last_status == VL53L0X_ERROR_NONE) && (_measure.RangeStatus != 4))
+    return _measure.RangeMilliMeter;
+
+  return 0xffff; // some out of range value
+}
+
+/**************************************************************************/
+/*!
+    @brief  Start a continuous range operation
+*/
+/**************************************************************************/
+boolean Adafruit_VL53L0X::startRangeContinuous(uint16_t period_ms) {
+  /* This function will do a complete single ranging
+   * Here we fix the mode! */
+  // first lets set the device in SINGLE_Ranging mode
+  _last_status = VL53L0X_SetDeviceMode(
+      pMyDevice, VL53L0X_DEVICEMODE_CONTINUOUS_TIMED_RANGING);
+
+  if (_last_status == VL53L0X_ERROR_NONE) {
+    _last_status =
+        VL53L0X_SetInterMeasurementPeriodMilliSeconds(pMyDevice, period_ms);
+  }
+
+  if (_last_status == VL53L0X_ERROR_NONE) {
+    // Lets start up the measurement
+    _last_status = VL53L0X_StartMeasurement(pMyDevice);
+  }
+  return (_last_status == VL53L0X_ERROR_NONE);
+}
+
+/**************************************************************************/
+/*!
+    @brief  Stop a continuous ranging operation
+*/
+/**************************************************************************/
+void Adafruit_VL53L0X::stopRangeContinuous(void) {
+
+  _last_status = VL53L0X_StopMeasurement(pMyDevice);
+
+  // lets wait until that completes.
+  uint32_t StopCompleted = 0;
+  uint32_t LoopNb;
+
+  // Wait until it finished
+  // use timeout to avoid deadlock
+  if (_last_status == VL53L0X_ERROR_NONE) {
+    LoopNb = 0;
+    do {
+      _last_status = VL53L0X_GetStopCompletedStatus(pMyDevice, &StopCompleted);
+      if ((StopCompleted == 0x00) || _last_status != VL53L0X_ERROR_NONE) {
+        break;
+      }
+      LoopNb = LoopNb + 1;
+      VL53L0X_PollingDelay(pMyDevice);
+    } while (LoopNb < VL53L0X_DEFAULT_MAX_LOOP);
+
+    if (LoopNb >= VL53L0X_DEFAULT_MAX_LOOP) {
+      _last_status = VL53L0X_ERROR_TIME_OUT;
+    }
+  }
+
+  if (_last_status == VL53L0X_ERROR_NONE) {
+    _last_status = VL53L0X_ClearInterruptMask(
+        pMyDevice, VL53L0X_REG_SYSTEM_INTERRUPT_GPIO_NEW_SAMPLE_READY);
+  }
 }

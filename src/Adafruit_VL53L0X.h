@@ -42,6 +42,8 @@ public:
                 TwoWire *i2c = &Wire);
   boolean setAddress(uint8_t newAddr);
 
+  uint8_t getAddress(void);
+
   /**************************************************************************/
   /*!
       @brief  get a ranging measurement from the device
@@ -67,11 +69,30 @@ public:
   VL53L0X_Error Status =
       VL53L0X_ERROR_NONE; ///< indicates whether or not the sensor has
                           ///< encountered an error
+  // Add similar methods as Adafruit_VL6180X class adapted to range of device
+  uint16_t readRange(void);
+  // float readLux(uint8_t gain);
+  uint8_t readRangeStatus(void);
+
+  boolean startRange(void);
+  boolean isRangeComplete(void);
+  boolean waitRangeComplete(void);
+  uint16_t readRangeResult(void);
+
+  boolean startRangeContinuous(uint16_t period_ms = 50);
+  void stopRangeContinuous(void);
+
+  //  void setTimeout(uint16_t timeout) { io_timeout = timeout; }
+  // uint16_t getTimeout(void) { return io_timeout; }
+  bool timeoutOccurred(void) { return false; }
 
 private:
   VL53L0X_Dev_t MyDevice;
   VL53L0X_Dev_t *pMyDevice = &MyDevice;
   VL53L0X_DeviceInfo_t DeviceInfo;
+
+  VL53L0X_RangingMeasurementData_t _measure; // keep our own private copy
+  VL53L0X_Error _last_status;
 };
 
 #endif
