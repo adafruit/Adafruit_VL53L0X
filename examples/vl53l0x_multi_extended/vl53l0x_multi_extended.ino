@@ -1,6 +1,17 @@
 #include <Adafruit_VL53L0X.h>
 #include <Wire.h>
 
+// Define which Wire objects to use, may depend on platform
+// or on your configurations. 
+#define SENSOR1_WIRE Wire
+#define SENSOR2_WIRE Wire
+#if defined(WIRE_IMPLEMENT_WIRE1)
+#define SENSOR3_WIRE Wire1
+#define SENSOR4_WIRE Wire1
+#else
+#define SENSOR3_WIRE Wire
+#define SENSOR4_WIRE Wire
+#endif
 // Setup mode for doing reads
 typedef enum {
   RUN_MODE_DEFAULT = 1,
@@ -32,14 +43,18 @@ typedef struct {
 // Actual object, could probalby include in structure above61
 Adafruit_VL53L0X sensor1;
 Adafruit_VL53L0X sensor2;
+#ifndef ARDUINO_ARCH_AVR  // not enough memory on uno for 4 objects
 Adafruit_VL53L0X sensor3;
 Adafruit_VL53L0X sensor4;
-
+#endif
 // Setup for 4 sensors
-sensorList_t sensors[] = {{&sensor1, &Wire, 0x30, 0, 1, SENSE_DEFAULT},
-                          {&sensor2, &Wire, 0x31, 2, 3, SENSE_DEFAULT},
-                          {&sensor3, &Wire1, 0x32, 4, 5, SENSE_DEFAULT},
-                          {&sensor4, &Wire1, 0x33, 6, 7, SENSE_DEFAULT}};
+sensorList_t sensors[] = {{&sensor1, &SENSOR1_WIRE, 0x30, 0, 1, SENSE_DEFAULT}
+                          ,{&sensor2, &SENSOR2_WIRE, 0x31, 2, 3, SENSE_DEFAULT}
+#ifndef ARDUINO_ARCH_AVR  // not enough memory on uno for 4 objects
+                          ,{&sensor3, &SENSOR3_WIRE, 0x32, 4, 5, SENSE_DEFAULT}
+                          ,{&sensor4, &SENSOR4_WIRE, 0x33, 6, 7, SENSE_DEFAULT}
+#endif                          
+                          };
 
 const int COUNT_SENSORS = sizeof(sensors) / sizeof(sensors[0]);
 
@@ -93,7 +108,7 @@ void Initialize_sensors() {
       found_any_sensors = true;
     } else {
       Serial.print(i, DEC);
-      Serial.print(": failed to start\n");
+      Serial.print(F(": failed to start\n"));
     }
   }
   if (!found_any_sensors) {
@@ -122,17 +137,17 @@ void read_sensors() {
   digitalWrite(13, LOW);
 
   Serial.print(delta_time, DEC);
-  Serial.print(" ");
+  Serial.print(F(" "));
   for (int i = 0; i < COUNT_SENSORS; i++) {
     Serial.print(i, DEC);
-    Serial.print(":");
+    Serial.print(F(":"));
     Serial.print(ranges_mm[i], DEC);
-    Serial.print(" ");
+    Serial.print(F(" "));
     Serial.print(stop_times[i] - start_time, DEC);
     if (timeouts[i])
-      Serial.print("(TIMEOUT) ");
+      Serial.print(F("(TIMEOUT) "));
     else
-      Serial.print("          ");
+      Serial.print(F("          "));
     start_time = stop_times[i];
   }
   Serial.println();
@@ -165,17 +180,17 @@ void timed_async_read_sensors() {
   digitalWrite(13, LOW);
 
   Serial.print(delta_time, DEC);
-  Serial.print(" ");
+  Serial.print(F(" "));
   for (int i = 0; i < COUNT_SENSORS; i++) {
     Serial.print(i, DEC);
-    Serial.print(":");
+    Serial.print(F(":"));
     Serial.print(ranges_mm[i], DEC);
-    Serial.print(" ");
+    Serial.print(F(" "));
     Serial.print(stop_times[i] - start_time, DEC);
     if (timeouts[i])
-      Serial.print("(TIMEOUT) ");
+      Serial.print(F("(TIMEOUT) "));
     else
-      Serial.print("          ");
+      Serial.print(F("          "));
     start_time = stop_times[i];
   }
   Serial.println();
@@ -223,17 +238,17 @@ void timed_async_read_gpio() {
   digitalWrite(13, LOW);
 
   Serial.print(delta_time, DEC);
-  Serial.print(" ");
+  Serial.print(F(" "));
   for (int i = 0; i < COUNT_SENSORS; i++) {
     Serial.print(i, DEC);
-    Serial.print(":");
+    Serial.print(F(":"));
     Serial.print(ranges_mm[i], DEC);
-    Serial.print(" ");
+    Serial.print(F(" "));
     Serial.print(stop_times[i] - start_time, DEC);
     if (timeouts[i])
-      Serial.print("(TIMEOUT) ");
+      Serial.print(F("(TIMEOUT) "));
     else
-      Serial.print("          ");
+      Serial.print(F("          "));
     start_time = stop_times[i];
   }
   Serial.println();
@@ -245,7 +260,7 @@ void timed_async_read_gpio() {
 void start_continuous_range(uint16_t cycle_time) {
   if (cycle_time == 0)
     cycle_time = 100;
-  Serial.print("start Continuous range mode cycle time: ");
+  Serial.print(F("start Continuous range mode cycle time: "));
   Serial.println(cycle_time, DEC);
   for (uint8_t i = 0; i < COUNT_SENSORS; i++) {
     sensors[i].psensor->startRangeContinuous(cycle_time); // do 100ms cycle
@@ -255,7 +270,7 @@ void start_continuous_range(uint16_t cycle_time) {
 }
 
 void stop_continuous_range() {
-  Serial.println("Stop Continuous range mode");
+  Serial.println(F("Stop Continuous range mode"));
   for (uint8_t i = 0; i < COUNT_SENSORS; i++) {
     sensors[i].psensor->stopRangeContinuous();
   }
@@ -285,18 +300,18 @@ void Process_continuous_range() {
   if (!sensors_pending || (delta_time > 1000)) {
     digitalWrite(13, !digitalRead(13));
     Serial.print(delta_time, DEC);
-    Serial.print("(");
+    Serial.print(F("("));
     Serial.print(sensors_pending, HEX);
-    Serial.print(")");
+    Serial.print(F(")"));
     mask = 1;
     for (uint8_t i = 0; i < COUNT_SENSORS; i++) {
-      Serial.print(" : ");
+      Serial.print(F(" : "));
       if (sensors_pending & mask)
-        Serial.print("TTT"); // show timeout in this one
+        Serial.print(F("TTT")); // show timeout in this one
       else if (sensors[i].sensor_status == VL53L0X_ERROR_NONE)
         Serial.print(sensors[i].range, DEC);
       else {
-        Serial.print("#");
+        Serial.print(F("#"));
         Serial.print(sensors[i].sensor_status, DEC);
       }
     }
@@ -313,8 +328,9 @@ void Process_continuous_range() {
 void setup() {
   Serial.begin(115200);
   Wire.begin();
+#if defined(WIRE_IMPLEMENT_WIRE1)
   Wire1.begin();
-
+#endif
   // wait until serial port opens ... For 5 seconds max
   while (!Serial && millis() < 5000)
     ;
@@ -322,7 +338,7 @@ void setup() {
   pinMode(13, OUTPUT);
 
   // initialize all of the pins.
-  Serial.println("VL53LOX_multi start, initialize IO pins");
+  Serial.println(F("VL53LOX_multi start, initialize IO pins"));
   for (int i = 0; i < COUNT_SENSORS; i++) {
     pinMode(sensors[i].shutdown_pin, OUTPUT);
     digitalWrite(sensors[i].shutdown_pin, LOW);
@@ -330,7 +346,7 @@ void setup() {
     if (sensors[i].interrupt_pin >= 0)
       pinMode(sensors[i].interrupt_pin, INPUT_PULLUP);
   }
-  Serial.println("Starting...");
+  Serial.println(F("Starting..."));
   Initialize_sensors();
 }
 
@@ -353,16 +369,16 @@ void loop() {
     case 'd':
     case 'D':
       run_mode = RUN_MODE_DEFAULT;
-      Serial.println("\n*** Default mode ***");
+      Serial.println(F("\n*** Default mode ***"));
       break;
     case 'a':
     case 'A':
-      Serial.println("\n*** Async mode ***");
+      Serial.println(F("\n*** Async mode ***"));
       run_mode = RUN_MODE_ASYNC;
       break;
     case 'g':
     case 'G':
-      Serial.println("\n*** GPIO mode ***");
+      Serial.println(F("\n*** GPIO mode ***"));
       run_mode = RUN_MODE_GPIO;
       break;
     case 'c':
@@ -386,13 +402,13 @@ void loop() {
     }
   }
   if (show_command_list) {
-    Serial.println("\nSet run mode by entering one of the following letters");
-    Serial.println("    D - Default mode");
+    Serial.println(F("\nSet run mode by entering one of the following letters"));
+    Serial.println(F("    D - Default mode"));
     Serial.println(
-        "    A - Asynchronous mode - Try starting all Seonsors at once");
-    Serial.println("    G - Asynchronous mode - Like above use GPIO pins");
+        F("    A - Asynchronous mode - Try starting all Seonsors at once"));
+    Serial.println(F("    G - Asynchronous mode - Like above use GPIO pins"));
     Serial.println(
-        "    C - Continuous mode - Try starting all Seonsors at once");
+        F("    C - Continuous mode - Try starting all Seonsors at once"));
     show_command_list = 0;
   }
   switch (run_mode) {

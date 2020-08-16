@@ -62,21 +62,21 @@ void read_dual_sensors() {
   lox2.rangingTest(&measure2, false); // pass in 'true' to get debug data printout!
 
   // print sensor one reading
-  Serial.print("1: ");
+  Serial.print(F("1: "));
   if(measure1.RangeStatus != 4) {     // if not out of range
     Serial.print(measure1.RangeMilliMeter);
   } else {
-    Serial.print("Out of range");
+    Serial.print(F("Out of range"));
   }
   
-  Serial.print(" ");
+  Serial.print(F(" "));
 
   // print sensor two reading
-  Serial.print("2: ");
+  Serial.print(F("2: "));
   if(measure2.RangeStatus != 4) {
     Serial.print(measure2.RangeMilliMeter);
   } else {
-    Serial.print("Out of range");
+    Serial.print(F("Out of range"));
   }
   
   Serial.println();
@@ -91,15 +91,15 @@ void setup() {
   pinMode(SHT_LOX1, OUTPUT);
   pinMode(SHT_LOX2, OUTPUT);
 
-  Serial.println("Shutdown pins inited...");
+  Serial.println(F("Shutdown pins inited..."));
 
   digitalWrite(SHT_LOX1, LOW);
   digitalWrite(SHT_LOX2, LOW);
 
-  Serial.println("Both in reset mode...(pins are low)");
+  Serial.println(F("Both in reset mode...(pins are low)"));
   
   
-  Serial.println("Starting...");
+  Serial.println(F("Starting..."));
   setID();
  
 }
