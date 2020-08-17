@@ -88,25 +88,38 @@ void Initialize_sensors() {
     digitalWrite(sensors[i].shutdown_pin, HIGH);
     delay(10); // give time to wake up.
     if (sensors[i].psensor->begin(sensors[i].id, false, sensors[i].pwire)) {
-#if 0
+      // Note: some of this was adapting the pololu library along with the
+      // ST examples.
       switch (sensors[i].init_options) {
-        case SENSE_DEFAULT:
-          break;
-        case SENSE_LONG_RANGE:
-          // lower the return signal rate limit (default is 0.25 MCPS)
-          sensors[i].psensor->setSignalRateLimit(0.1);
-          // increase laser pulse periods (defaults are 14 and 10 PCLKs)
-          sensors[i].psensor->setVcselPulsePeriod(VL53L0X::VcselPeriodPreRange, 18);
-          sensors[i].psensor->setVcselPulsePeriod(VL53L0X::VcselPeriodFinalRange, 14);
-          break;
-        case SENSE_HIGH_SPEED:
-          sensors[i].psensor->setMeasurementTimingBudget(20000);
-          break;
-        case SENSE_HIGH_ACCURACY:
-          // increase timing budget to 200 ms
-          sensors[i].psensor->setMeasurementTimingBudget(200000);
+      case SENSE_DEFAULT:
+        break;
+      case SENSE_LONG_RANGE:
+        // lower the return signal rate limit (default is 0.25 MCPS)
+        // Not sure if I need to call the enable or not...
+        sensors[i].psensor->setLimitCheckEnable(
+            VL53L0X_CHECKENABLE_SIGNAL_RATE_FINAL_RANGE, 1);
+        sensors[i].psensor->setLimitCheckValue(
+            VL53L0X_CHECKENABLE_SIGNAL_RATE_FINAL_RANGE,
+            (FixPoint1616_t)(0.1 * 65536));
+        // increase laser pulse periods (defaults are 14 and 10 PCLKs)
+        sensors[i].psensor->setVcselPulsePeriod(VL53L0X_VCSEL_PERIOD_PRE_RANGE,
+                                                18);
+        sensors[i].psensor->setVcselPulsePeriod(
+            VL53L0X_VCSEL_PERIOD_FINAL_RANGE, 14);
+        break;
+      case SENSE_HIGH_SPEED:
+        sensors[i].psensor->setMeasurementTimingBudgetMicroSeconds(20000);
+        break;
+      case SENSE_HIGH_ACCURACY:
+        // increase timing budget to 200 ms
+        sensors[i].psensor->setLimitCheckValue(
+            VL53L0X_CHECKENABLE_SIGNAL_RATE_FINAL_RANGE,
+            (FixPoint1616_t)(0.25 * 65536));
+        sensors[i].psensor->setLimitCheckValue(
+            VL53L0X_CHECKENABLE_SIGMA_FINAL_RANGE,
+            (FixPoint1616_t)(18 * 65536));
+        sensors[i].psensor->setMeasurementTimingBudgetMicroSeconds(200000);
       }
-#endif
       found_any_sensors = true;
     } else {
       Serial.print(i, DEC);

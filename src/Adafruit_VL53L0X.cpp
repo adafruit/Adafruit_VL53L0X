@@ -448,3 +448,136 @@ void Adafruit_VL53L0X::stopRangeContinuous(void) {
         pMyDevice, VL53L0X_REG_SYSTEM_INTERRUPT_GPIO_NEW_SAMPLE_READY);
   }
 }
+
+/**************************************************************************/
+/*!
+    @brief  Wrapper to ST library code to budget how long a measurement
+    should take
+    @param  budget_us the new budget
+    @returns True if success
+*/
+/**************************************************************************/
+boolean
+Adafruit_VL53L0X::setMeasurementTimingBudgetMicroSeconds(uint32_t budget_us) {
+  _last_status =
+      VL53L0X_SetMeasurementTimingBudgetMicroSeconds(pMyDevice, budget_us);
+  return (_last_status == VL53L0X_ERROR_NONE);
+}
+
+/**************************************************************************/
+/*!
+    @brief  Wrapper to ST library code to budget how long a measurement
+    should take
+    @param  budget_us the new budget
+    @returns the current budget time in microseconds.
+*/
+/**************************************************************************/
+uint32_t Adafruit_VL53L0X::getMeasurementTimingBudgetMicroSeconds() {
+  uint32_t budget_us;
+  _last_status =
+      VL53L0X_GetMeasurementTimingBudgetMicroSeconds(pMyDevice, &budget_us);
+  return (budget_us);
+}
+
+/**************************************************************************/
+/*!
+    @brief Sets the VCSEL pulse period.
+
+    @param   VcselPeriodType       VCSEL period identifier (pre-range|final).
+    @param   VCSELPulsePeriod          VCSEL period value
+    @returns True if success
+*/
+/**************************************************************************/
+boolean
+Adafruit_VL53L0X::setVcselPulsePeriod(VL53L0X_VcselPeriod VcselPeriodType,
+                                      uint8_t VCSELPulsePeriod) {
+  _last_status =
+      VL53L0X_SetVcselPulsePeriod(pMyDevice, VcselPeriodType, VCSELPulsePeriod);
+  return (_last_status == VL53L0X_ERROR_NONE);
+}
+
+/**************************************************************************/
+/*!
+    @brief Gets the VCSEL pulse period.
+
+    @param   VcselPeriodType       VCSEL period identifier (pre-range|final).
+    @returns the current pulse peried for the given type.
+*/
+/**************************************************************************/
+uint8_t
+Adafruit_VL53L0X::getVcselPulsePeriod(VL53L0X_VcselPeriod VcselPeriodType) {
+  uint8_t cur_period;
+  _last_status =
+      VL53L0X_GetVcselPulsePeriod(pMyDevice, VcselPeriodType, &cur_period);
+  return (cur_period);
+}
+
+/**************************************************************************/
+/*!
+    @brief  Enable/Disable a specific limit check
+
+    @param   LimitCheckId                  Limit Check ID
+     (0<= LimitCheckId < VL53L0X_GetNumberOfLimitCheck() ).
+    @param   LimitCheckEnable              if 1 the check limit
+     corresponding to LimitCheckId is Enabled
+                                           if 0 the check limit
+     corresponding to LimitCheckId is disabled
+    @return  true if succeeded
+ */
+/**************************************************************************/
+boolean Adafruit_VL53L0X::setLimitCheckEnable(uint16_t LimitCheckId,
+                                              uint8_t LimitCheckEnable) {
+  _last_status =
+      VL53L0X_SetLimitCheckEnable(pMyDevice, LimitCheckId, LimitCheckEnable);
+  return (_last_status == VL53L0X_ERROR_NONE);
+}
+
+/**************************************************************************/
+/*!
+    @brief  Get specific limit check enable state
+    @param   LimitCheckId                  Limit Check ID
+     (0<= LimitCheckId < VL53L0X_GetNumberOfLimitCheck() ).
+    @return  current state of limit enabled
+ */
+/**************************************************************************/
+uint8_t Adafruit_VL53L0X::getLimitCheckEnable(uint16_t LimitCheckId) {
+
+  uint8_t cur_limit;
+  _last_status =
+      VL53L0X_GetLimitCheckEnable(pMyDevice, LimitCheckId, &cur_limit);
+  return (cur_limit);
+}
+
+/**************************************************************************/
+/*!
+    @brief  Set a specific limit check value
+    @param   LimitCheckId                  Limit Check ID
+     (0<= LimitCheckId < VL53L0X_GetNumberOfLimitCheck() ).
+    LimitCheckId
+    @return  true if succeeded.
+ */
+/**************************************************************************/
+
+boolean Adafruit_VL53L0X::setLimitCheckValue(uint16_t LimitCheckId,
+                                             FixPoint1616_t LimitCheckValue) {
+
+  _last_status =
+      VL53L0X_SetLimitCheckValue(pMyDevice, LimitCheckId, LimitCheckValue);
+  return (_last_status == VL53L0X_ERROR_NONE);
+}
+
+/**************************************************************************/
+/*!
+    @brief  Get a specific limit check value
+    @param   LimitCheckId                  Limit Check ID
+     (0<= LimitCheckId < VL53L0X_GetNumberOfLimitCheck() ).
+    @return  limit check value in FixPoint1616
+ */
+/**************************************************************************/
+FixPoint1616_t Adafruit_VL53L0X::getLimitCheckValue(uint16_t LimitCheckId) {
+
+  FixPoint1616_t LimitCheckValue;
+  _last_status =
+      VL53L0X_GetLimitCheckValue(pMyDevice, LimitCheckId, &LimitCheckValue);
+  return (LimitCheckValue);
+}

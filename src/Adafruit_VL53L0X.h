@@ -84,7 +84,24 @@ public:
 
   //  void setTimeout(uint16_t timeout) { io_timeout = timeout; }
   // uint16_t getTimeout(void) { return io_timeout; }
-  bool timeoutOccurred(void) { return false; }
+  boolean timeoutOccurred(void) { return false; }
+
+  // Export some wrappers to internal setting functions
+  // to allow sketches more control on configuring the device
+
+  boolean setMeasurementTimingBudgetMicroSeconds(uint32_t budget_us);
+  uint32_t getMeasurementTimingBudgetMicroSeconds(void);
+
+  boolean setVcselPulsePeriod(VL53L0X_VcselPeriod VcselPeriodType,
+                              uint8_t VCSELPulsePeriod);
+
+  uint8_t getVcselPulsePeriod(VL53L0X_VcselPeriod VcselPeriodType);
+
+  boolean setLimitCheckEnable(uint16_t LimitCheckId, uint8_t LimitCheckEnable);
+  uint8_t getLimitCheckEnable(uint16_t LimitCheckId);
+  boolean setLimitCheckValue(uint16_t LimitCheckId,
+                             FixPoint1616_t LimitCheckValue);
+  FixPoint1616_t getLimitCheckValue(uint16_t LimitCheckId);
 
 private:
   VL53L0X_Dev_t MyDevice;
