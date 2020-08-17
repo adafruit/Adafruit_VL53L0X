@@ -299,10 +299,13 @@ void Adafruit_VL53L0X::printRangeStatus(
 /**************************************************************************/
 
 uint16_t Adafruit_VL53L0X::readRange(void) {
-  Status = VL53L0X_PerformSingleRangingMeasurement(pMyDevice, &_measure);
+  VL53L0X_RangingMeasurementData_t measure; // keep our own private copy
 
-  if (Status == VL53L0X_ERROR_NONE)
-    return _measure.RangeMilliMeter;
+  _last_status = VL53L0X_GetRangingMeasurementData(pMyDevice, &measure);
+  _rangeStatus = measure.RangeStatus;
+
+  if (_last_status == VL53L0X_ERROR_NONE)
+    return measure.RangeMilliMeter;
   // Other status return something totally out of bounds...
   return 0xffff;
 }
@@ -314,7 +317,7 @@ uint16_t Adafruit_VL53L0X::readRange(void) {
 */
 /**************************************************************************/
 
-uint8_t Adafruit_VL53L0X::readRangeStatus(void) { return _measure.RangeStatus; }
+uint8_t Adafruit_VL53L0X::readRangeStatus(void) { return _rangeStatus; }
 
 /**************************************************************************/
 /*!
@@ -372,13 +375,15 @@ boolean Adafruit_VL53L0X::waitRangeComplete(void) {
 /**************************************************************************/
 
 uint16_t Adafruit_VL53L0X::readRangeResult(void) {
-  _last_status = VL53L0X_GetRangingMeasurementData(pMyDevice, &_measure);
+  VL53L0X_RangingMeasurementData_t measure; // keep our own private copy
 
+  _last_status = VL53L0X_GetRangingMeasurementData(pMyDevice, &measure);
+  _rangeStatus = measure.RangeStatus;
   if (_last_status == VL53L0X_ERROR_NONE)
     _last_status = VL53L0X_ClearInterruptMask(pMyDevice, 0);
 
-  if ((_last_status == VL53L0X_ERROR_NONE) && (_measure.RangeStatus != 4))
-    return _measure.RangeMilliMeter;
+  if ((_last_status == VL53L0X_ERROR_NONE) && (_rangeStatus != 4))
+    return measure.RangeMilliMeter;
 
   return 0xffff; // some out of range value
 }

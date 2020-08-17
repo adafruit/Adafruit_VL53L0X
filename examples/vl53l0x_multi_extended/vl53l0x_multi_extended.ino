@@ -2,7 +2,7 @@
 #include <Wire.h>
 
 // Define which Wire objects to use, may depend on platform
-// or on your configurations. 
+// or on your configurations.
 #define SENSOR1_WIRE Wire
 #define SENSOR2_WIRE Wire
 #if defined(WIRE_IMPLEMENT_WIRE1)
@@ -43,18 +43,20 @@ typedef struct {
 // Actual object, could probalby include in structure above61
 Adafruit_VL53L0X sensor1;
 Adafruit_VL53L0X sensor2;
-#ifndef ARDUINO_ARCH_AVR  // not enough memory on uno for 4 objects
+#ifndef ARDUINO_ARCH_AVR // not enough memory on uno for 4 objects
 Adafruit_VL53L0X sensor3;
 Adafruit_VL53L0X sensor4;
 #endif
 // Setup for 4 sensors
-sensorList_t sensors[] = {{&sensor1, &SENSOR1_WIRE, 0x30, 0, 1, SENSE_DEFAULT}
-                          ,{&sensor2, &SENSOR2_WIRE, 0x31, 2, 3, SENSE_DEFAULT}
-#ifndef ARDUINO_ARCH_AVR  // not enough memory on uno for 4 objects
-                          ,{&sensor3, &SENSOR3_WIRE, 0x32, 4, 5, SENSE_DEFAULT}
-                          ,{&sensor4, &SENSOR4_WIRE, 0x33, 6, 7, SENSE_DEFAULT}
-#endif                          
-                          };
+sensorList_t sensors[] = {
+    {&sensor1, &SENSOR1_WIRE, 0x30, 0, 1, SENSE_DEFAULT, 0, 0},
+    {&sensor2, &SENSOR2_WIRE, 0x31, 2, 3, SENSE_DEFAULT, 0, 0}
+#ifndef ARDUINO_ARCH_AVR // not enough memory on uno for 4 objects
+    ,
+    {&sensor3, &SENSOR3_WIRE, 0x32, 4, 5, SENSE_DEFAULT, 0, 0},
+    {&sensor4, &SENSOR4_WIRE, 0x33, 6, 7, SENSE_DEFAULT, 0, 0}
+#endif
+};
 
 const int COUNT_SENSORS = sizeof(sensors) / sizeof(sensors[0]);
 
@@ -308,11 +310,14 @@ void Process_continuous_range() {
       Serial.print(F(" : "));
       if (sensors_pending & mask)
         Serial.print(F("TTT")); // show timeout in this one
-      else if (sensors[i].sensor_status == VL53L0X_ERROR_NONE)
-        Serial.print(sensors[i].range, DEC);
       else {
-        Serial.print(F("#"));
-        Serial.print(sensors[i].sensor_status, DEC);
+        Serial.print(sensors[i].range, DEC);
+        if (sensors[i].sensor_status == VL53L0X_ERROR_NONE)
+          Serial.print(F("  "));
+        else {
+          Serial.print(F("#"));
+          Serial.print(sensors[i].sensor_status, DEC);
+        }
       }
     }
     // setup for next pass
@@ -402,7 +407,8 @@ void loop() {
     }
   }
   if (show_command_list) {
-    Serial.println(F("\nSet run mode by entering one of the following letters"));
+    Serial.println(
+        F("\nSet run mode by entering one of the following letters"));
     Serial.println(F("    D - Default mode"));
     Serial.println(
         F("    A - Asynchronous mode - Try starting all Seonsors at once"));

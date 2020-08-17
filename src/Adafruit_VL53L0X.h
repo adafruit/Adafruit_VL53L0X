@@ -91,7 +91,8 @@ private:
   VL53L0X_Dev_t *pMyDevice = &MyDevice;
   VL53L0X_DeviceInfo_t DeviceInfo;
 
-  VL53L0X_RangingMeasurementData_t _measure; // keep our own private copy
+  // uint16_t _rangeMilliMeter;
+  uint8_t _rangeStatus;
   VL53L0X_Error _last_status;
 };
 
