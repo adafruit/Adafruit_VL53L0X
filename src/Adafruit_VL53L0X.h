@@ -38,8 +38,18 @@
 /**************************************************************************/
 class Adafruit_VL53L0X {
 public:
+  // Helper function to configure sensor for the different configurations
+  // shown in ST library example sketches.
+  typedef enum {
+    VL53L0X_SENSE_DEFAULT = 0,
+    VL53L0X_SENSE_LONG_RANGE,
+    VL53L0X_SENSE_HIGH_SPEED,
+    VL53L0X_SENSE_HIGH_ACCURACY
+  } VL53L0X_Sense_config_t;
+
   boolean begin(uint8_t i2c_addr = VL53L0X_I2C_ADDR, boolean debug = false,
-                TwoWire *i2c = &Wire);
+                TwoWire *i2c = &Wire,
+                VL53L0X_Sense_config_t vl_config = VL53L0X_SENSE_DEFAULT);
   boolean setAddress(uint8_t newAddr);
 
   uint8_t getAddress(void);
@@ -86,9 +96,11 @@ public:
   // uint16_t getTimeout(void) { return io_timeout; }
   boolean timeoutOccurred(void) { return false; }
 
-  // Export some wrappers to internal setting functions
-  // to allow sketches more control on configuring the device
+  boolean configSensor(VL53L0X_Sense_config_t vl_config);
 
+  // Export some wrappers to internal setting functions
+  // that are used by the above helper function to allow
+  // more complete control.
   boolean setMeasurementTimingBudgetMicroSeconds(uint32_t budget_us);
   uint32_t getMeasurementTimingBudgetMicroSeconds(void);
 
@@ -108,9 +120,7 @@ private:
   VL53L0X_Dev_t *pMyDevice = &MyDevice;
   VL53L0X_DeviceInfo_t DeviceInfo;
 
-  // uint16_t _rangeMilliMeter;
   uint8_t _rangeStatus;
-  VL53L0X_Error _last_status;
 };
 
 #endif

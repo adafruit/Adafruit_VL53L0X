@@ -23,21 +23,16 @@ typedef enum {
 runmode_t run_mode = RUN_MODE_DEFAULT;
 uint8_t show_command_list = 1;
 
-typedef enum {
-  SENSE_DEFAULT = 0,
-  SENSE_LONG_RANGE,
-  SENSE_HIGH_SPEED,
-  SENSE_HIGH_ACCURACY
-} sensorSense_t;
 typedef struct {
   Adafruit_VL53L0X *psensor; // pointer to object
   TwoWire *pwire;
-  int id;                     // id for the sensor
-  int shutdown_pin;           // which pin for shutdown;
-  int interrupt_pin;          // which pin to use for interrupts.
-  sensorSense_t init_options; // options for how to use the sensor
-  uint16_t range;             // range value used in continuous mode stuff.
-  uint8_t sensor_status;      // status from last ranging in continous.
+  int id;            // id for the sensor
+  int shutdown_pin;  // which pin for shutdown;
+  int interrupt_pin; // which pin to use for interrupts.
+  Adafruit_VL53L0X::VL53L0X_Sense_config_t
+      sensor_config;     // options for how to use the sensor
+  uint16_t range;        // range value used in continuous mode stuff.
+  uint8_t sensor_status; // status from last ranging in continous.
 } sensorList_t;
 
 // Actual object, could probalby include in structure above61
@@ -49,12 +44,21 @@ Adafruit_VL53L0X sensor4;
 #endif
 // Setup for 4 sensors
 sensorList_t sensors[] = {
-    {&sensor1, &SENSOR1_WIRE, 0x30, 0, 1, SENSE_DEFAULT, 0, 0},
-    {&sensor2, &SENSOR2_WIRE, 0x31, 2, 3, SENSE_DEFAULT, 0, 0}
 #ifndef ARDUINO_ARCH_AVR // not enough memory on uno for 4 objects
-    ,
-    {&sensor3, &SENSOR3_WIRE, 0x32, 4, 5, SENSE_DEFAULT, 0, 0},
-    {&sensor4, &SENSOR4_WIRE, 0x33, 6, 7, SENSE_DEFAULT, 0, 0}
+    {&sensor1, &SENSOR1_WIRE, 0x30, 0, 1,
+     Adafruit_VL53L0X::VL53L0X_SENSE_LONG_RANGE, 0, 0},
+    {&sensor2, &SENSOR2_WIRE, 0x31, 2, 3,
+     Adafruit_VL53L0X::VL53L0X_SENSE_HIGH_SPEED, 0, 0},
+    {&sensor3, &SENSOR3_WIRE, 0x32, 4, 5,
+     Adafruit_VL53L0X::VL53L0X_SENSE_DEFAULT, 0, 0},
+    {&sensor4, &SENSOR4_WIRE, 0x33, 6, 7,
+     Adafruit_VL53L0X::VL53L0X_SENSE_DEFAULT, 0, 0}
+#else
+    // AVR sensors move to other pins
+    {&sensor1, &SENSOR1_WIRE, 0x30, 6, 8,
+     Adafruit_VL53L0X::VL53L0X_SENSE_LONG_RANGE, 0, 0},
+    {&sensor2, &SENSOR2_WIRE, 0x31, 7, 9,
+     Adafruit_VL53L0X::VL53L0X_SENSE_HIGH_SPEED, 0, 0},
 #endif
 };
 
@@ -87,39 +91,8 @@ void Initialize_sensors() {
     // one by one enable sensors and set their ID
     digitalWrite(sensors[i].shutdown_pin, HIGH);
     delay(10); // give time to wake up.
-    if (sensors[i].psensor->begin(sensors[i].id, false, sensors[i].pwire)) {
-      // Note: some of this was adapting the pololu library along with the
-      // ST examples.
-      switch (sensors[i].init_options) {
-      case SENSE_DEFAULT:
-        break;
-      case SENSE_LONG_RANGE:
-        // lower the return signal rate limit (default is 0.25 MCPS)
-        // Not sure if I need to call the enable or not...
-        sensors[i].psensor->setLimitCheckEnable(
-            VL53L0X_CHECKENABLE_SIGNAL_RATE_FINAL_RANGE, 1);
-        sensors[i].psensor->setLimitCheckValue(
-            VL53L0X_CHECKENABLE_SIGNAL_RATE_FINAL_RANGE,
-            (FixPoint1616_t)(0.1 * 65536));
-        // increase laser pulse periods (defaults are 14 and 10 PCLKs)
-        sensors[i].psensor->setVcselPulsePeriod(VL53L0X_VCSEL_PERIOD_PRE_RANGE,
-                                                18);
-        sensors[i].psensor->setVcselPulsePeriod(
-            VL53L0X_VCSEL_PERIOD_FINAL_RANGE, 14);
-        break;
-      case SENSE_HIGH_SPEED:
-        sensors[i].psensor->setMeasurementTimingBudgetMicroSeconds(20000);
-        break;
-      case SENSE_HIGH_ACCURACY:
-        // increase timing budget to 200 ms
-        sensors[i].psensor->setLimitCheckValue(
-            VL53L0X_CHECKENABLE_SIGNAL_RATE_FINAL_RANGE,
-            (FixPoint1616_t)(0.25 * 65536));
-        sensors[i].psensor->setLimitCheckValue(
-            VL53L0X_CHECKENABLE_SIGMA_FINAL_RANGE,
-            (FixPoint1616_t)(18 * 65536));
-        sensors[i].psensor->setMeasurementTimingBudgetMicroSeconds(200000);
-      }
+    if (sensors[i].psensor->begin(sensors[i].id, false, sensors[i].pwire,
+                                  sensors[i].sensor_config)) {
       found_any_sensors = true;
     } else {
       Serial.print(i, DEC);
