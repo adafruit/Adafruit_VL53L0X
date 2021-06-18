@@ -3,7 +3,7 @@
 Adafruit_VL53L0X lox = Adafruit_VL53L0X();
 
 void setup() {
-  lox.begin(0x2B);// put any address between 0x29 to 0x7F
+  lox.begin(0x29);// put any address between 0x29 to 0x7F
   Serial.begin(9600);
 
   // wait until serial port opens for native USB devices
