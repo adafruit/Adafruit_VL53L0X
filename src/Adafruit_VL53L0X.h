@@ -51,7 +51,7 @@ public:
                 VL53L0X_Sense_config_t vl_config = VL53L0X_SENSE_DEFAULT);
   boolean setAddress(uint8_t newAddr);
 
-  //uint8_t getAddress(void); // not currently implemented
+  // uint8_t getAddress(void); // not currently implemented
 
   /**************************************************************************/
   /*!
@@ -93,7 +93,7 @@ public:
 
   //  void setTimeout(uint16_t timeout) { io_timeout = timeout; }
   // uint16_t getTimeout(void) { return io_timeout; }
-    /**************************************************************************/
+  /**************************************************************************/
   /*!
       @brief  timeout status
       @returns True if timeout has occurred, False otherwise
