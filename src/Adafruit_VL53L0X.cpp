@@ -47,6 +47,7 @@
     @param debug Optional debug flag. If true, debug information will print out
    via Serial.print during setup. Defaults to false.
     @param  i2c Optional I2C bus the sensor is located on. Default is Wire
+    @param vl_config Sensor configuration
     @returns True if device is set up, false on any failure
 */
 /**************************************************************************/
@@ -386,8 +387,8 @@ void Adafruit_VL53L0X::printRangeStatus(
 
 /**************************************************************************/
 /*!
-    @brief  Single shot ranging. Be sure to check the return of {@link
-   readRangeStatus} to before using the return value!
+    @brief  Single shot ranging. Be sure to check the return of readRangeStatus
+    to before using the return value!
     @return Distance in millimeters if valid
 */
 /**************************************************************************/
@@ -484,6 +485,8 @@ uint16_t Adafruit_VL53L0X::readRangeResult(void) {
 /**************************************************************************/
 /*!
     @brief  Start a continuous range operation
+    @param period_ms inter measurement period in milliseconds
+    @return True if successful, false otherwise
 */
 /**************************************************************************/
 boolean Adafruit_VL53L0X::startRangeContinuous(uint16_t period_ms) {
@@ -560,7 +563,6 @@ Adafruit_VL53L0X::setMeasurementTimingBudgetMicroSeconds(uint32_t budget_us) {
 /*!
     @brief  Wrapper to ST library code to budget how long a measurement
     should take
-    @param  budget_us the new budget
     @returns the current budget time in microseconds.
 */
 /**************************************************************************/
@@ -641,9 +643,10 @@ uint8_t Adafruit_VL53L0X::getLimitCheckEnable(uint16_t LimitCheckId) {
 /**************************************************************************/
 /*!
     @brief  Set a specific limit check value
-    @param   LimitCheckId                  Limit Check ID
+    @param  LimitCheckId  Limit Check ID
      (0<= LimitCheckId < VL53L0X_GetNumberOfLimitCheck() ).
     LimitCheckId
+    @param  LimitCheckValue  Limit Check Value
     @return  true if succeeded.
  */
 /**************************************************************************/
