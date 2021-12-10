@@ -34,7 +34,7 @@ void setID() {
   digitalWrite(SHT_LOX2, HIGH);
   delay(10);
 
-  // activating LOX1 and reseting LOX2
+  // activating LOX1 and resetting LOX2
   digitalWrite(SHT_LOX1, HIGH);
   digitalWrite(SHT_LOX2, LOW);
 
