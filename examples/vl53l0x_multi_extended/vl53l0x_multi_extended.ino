@@ -32,10 +32,10 @@ typedef struct {
   Adafruit_VL53L0X::VL53L0X_Sense_config_t
       sensor_config;     // options for how to use the sensor
   uint16_t range;        // range value used in continuous mode stuff.
-  uint8_t sensor_status; // status from last ranging in continous.
+  uint8_t sensor_status; // status from last ranging in continuous.
 } sensorList_t;
 
-// Actual object, could probalby include in structure above61
+// Actual object, could probably include in structure above61
 Adafruit_VL53L0X sensor1;
 Adafruit_VL53L0X sensor2;
 #ifndef ARDUINO_ARCH_AVR // not enough memory on uno for 4 objects

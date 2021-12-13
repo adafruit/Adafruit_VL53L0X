@@ -203,7 +203,7 @@ VL53L0X_Error VL53L0X_get_limit_check_info(VL53L0X_DEV Dev,
 #define VL53L0X_STRING_DEVICEERROR_MINCLIP "Min Clip Error"
 #define VL53L0X_STRING_DEVICEERROR_RANGECOMPLETE "Range Complete"
 #define VL53L0X_STRING_DEVICEERROR_ALGOUNDERFLOW "Range Algo Underflow Error"
-#define VL53L0X_STRING_DEVICEERROR_ALGOOVERFLOW "Range Algo Overlow Error"
+#define VL53L0X_STRING_DEVICEERROR_ALGOOVERFLOW "Range Algo Overflow Error"
 #define VL53L0X_STRING_DEVICEERROR_RANGEIGNORETHRESHOLD                        \
   "Range Ignore Threshold Error"
 #define VL53L0X_STRING_DEVICEERROR_UNKNOWN "Unknown error code"

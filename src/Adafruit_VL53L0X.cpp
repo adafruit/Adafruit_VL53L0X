@@ -300,7 +300,7 @@ boolean Adafruit_VL53L0X::configSensor(VL53L0X_Sense_config_t vl_config) {
     if (Status == VL53L0X_ERROR_NONE) {
       setMeasurementTimingBudgetMicroSeconds(200000);
     }
-    // Not sure about ignore threhold, try turnning it off...
+    // Not sure about ignore threshold, try turnning it off...
     if (Status == VL53L0X_ERROR_NONE) {
       Status = VL53L0X_SetLimitCheckEnable(
           pMyDevice, VL53L0X_CHECKENABLE_RANGE_IGNORE_THRESHOLD, 0);
@@ -407,7 +407,7 @@ uint16_t Adafruit_VL53L0X::readRange(void) {
 
 /**************************************************************************/
 /*!
-    @brief  Request ranging success/error message (retreive after ranging)
+    @brief  Request ranging success/error message (retrieve after ranging)
     @returns One of possible VL6180X_ERROR_* values
 */
 /**************************************************************************/

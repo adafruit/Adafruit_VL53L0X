@@ -1878,7 +1878,7 @@ VL53L0X_SetDmaxCalParameters(VL53L0X_DEV Dev, uint16_t RangeMilliMeter,
    * value are get from NVM */
   if ((RangeMilliMeter == 0) || (SignalRateRtnMegaCps == 0)) {
     /* NVM parameters */
-    /* Run VL53L0X_get_info_from_device wit option 4 to get
+    /* Run VL53L0X_get_info_from_device with option 4 to get
      * signal rate at 400 mm if the value have been already
      * get this function will return with no access to device */
     VL53L0X_get_info_from_device(Dev, 4);
