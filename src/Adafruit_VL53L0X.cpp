@@ -362,7 +362,7 @@ VL53L0X_Error Adafruit_VL53L0X::getSingleRangingMeasurement(
 }
 /**************************************************************************/
 /*!
-    @brief Start ranging measurement from the device
+    @brief Start the ranging measurement from the device
     @param debug Optional debug flag. If true debug information will print via
    Serial.print during execution. Defaults to false.
     @returns status code
