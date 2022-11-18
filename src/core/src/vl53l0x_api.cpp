@@ -528,7 +528,8 @@ VL53L0X_GetTuningSettingBuffer(VL53L0X_DEV Dev, uint8_t **ppTuningSettingBuffer,
 
 VL53L0X_Error VL53L0X_StaticInit(VL53L0X_DEV Dev) {
   VL53L0X_Error Status = VL53L0X_ERROR_NONE;
-  VL53L0X_DeviceParameters_t CurrentParameters = {0};
+  VL53L0X_DeviceParameters_t CurrentParameters = {0, 0, 0, 0, 0, 0,
+                                                  0, 0, 0, 0, 0, 0};
   uint8_t *pTuningSettingBuffer;
   uint16_t tempword = 0;
   uint8_t tempbyte = 0;
