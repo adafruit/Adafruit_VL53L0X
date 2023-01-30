@@ -253,7 +253,7 @@ boolean Adafruit_VL53L0X::configSensor(VL53L0X_Sense_config_t vl_config) {
     }
     break;
   case VL53L0X_SENSE_LONG_RANGE:
-    Serial.println("  VL53L0X_SENSE_LONG_RANGE");
+    Serial.println(F("  VL53L0X_SENSE_LONG_RANGE"));
     Status = VL53L0X_SetLimitCheckValue(
         pMyDevice, VL53L0X_CHECKENABLE_SIGNAL_RATE_FINAL_RANGE,
         (FixPoint1616_t)(0.1 * 65536));
