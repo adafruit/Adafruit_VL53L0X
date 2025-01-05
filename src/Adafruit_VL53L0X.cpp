@@ -686,6 +686,24 @@ void Adafruit_VL53L0X::printRangeStatus(
 
 /**************************************************************************/
 /*!
+    @brief  Print a PAL error code out via Serial.print in a human-readable
+           format
+    @param PalErrorCode the error code to print
+*/
+/**************************************************************************/
+void Adafruit_VL53L0X::printPalErrorString(VL53L0X_Error PalErrorCode) {
+  char buf[VL53L0X_MAX_STRING_LENGTH];
+
+  VL53L0X_GetPalErrorString(PalErrorCode, buf);
+
+  Serial.print(F("PalErrorCode: "));
+  Serial.print(PalErrorCode);
+  Serial.print(F(" : "));
+  Serial.println(buf);
+}
+
+/**************************************************************************/
+/*!
     @brief  Single shot ranging. Be sure to check the return of readRangeStatus
     to before using the return value!
     @return Distance in millimeters if valid

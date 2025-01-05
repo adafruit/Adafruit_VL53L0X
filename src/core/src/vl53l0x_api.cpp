@@ -2010,8 +2010,8 @@ VL53L0X_PerformOffsetCalibration(VL53L0X_DEV Dev,
 VL53L0X_Error VL53L0X_CheckAndLoadInterruptSettings(VL53L0X_DEV Dev,
                                                     uint8_t StartNotStopFlag) {
   uint8_t InterruptConfig;
-  FixPoint1616_t ThresholdLow;
-  FixPoint1616_t ThresholdHigh;
+  FixPoint1616_t ThresholdLow = 0;  // both zero-initialized as they might
+  FixPoint1616_t ThresholdHigh = 0; // not get set by _GetInterruptThresholds()
   VL53L0X_Error Status = VL53L0X_ERROR_NONE;
 
   InterruptConfig =

@@ -77,6 +77,7 @@ public:
       boolean debug = false);
   void
   printRangeStatus(VL53L0X_RangingMeasurementData_t *pRangingMeasurementData);
+  void printPalErrorString(VL53L0X_Error PalErrorCode);
 
   VL53L0X_Error getRangingMeasurement(
       VL53L0X_RangingMeasurementData_t *pRangingMeasurementData,
