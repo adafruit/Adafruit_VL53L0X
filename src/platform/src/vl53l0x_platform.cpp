@@ -135,7 +135,6 @@ VL53L0X_Error VL53L0X_WriteMulti(VL53L0X_DEV Dev, uint8_t index, uint8_t *pdata,
 // the ranging_sensor_comms.dll will take care of the page selection
 VL53L0X_Error VL53L0X_ReadMulti(VL53L0X_DEV Dev, uint8_t index, uint8_t *pdata,
                                 uint32_t count) {
-  VL53L0X_I2C_USER_VAR
   VL53L0X_Error Status = VL53L0X_ERROR_NONE;
   VL53L0X_Error command_status;
   uint8_t deviceAddress;
