@@ -97,7 +97,7 @@ VL53L0X_Error VL53L0X_read_byte(uint8_t deviceAddress, uint8_t index, uint8_t *d
 VL53L0X_Error VL53L0X_read_word(uint8_t deviceAddress, uint8_t index, uint16_t *data,
                       TwoWire *i2c) {
   uint8_t buff[2];
-  int r = VL53L0X_read_multi(deviceAddress, index, buff, 2, i2c);
+  VL53L0X_Error r = VL53L0X_read_multi(deviceAddress, index, buff, 2, i2c);
 
   uint16_t tmp;
   tmp = buff[0];
@@ -111,7 +111,7 @@ VL53L0X_Error VL53L0X_read_word(uint8_t deviceAddress, uint8_t index, uint16_t *
 VL53L0X_Error VL53L0X_read_dword(uint8_t deviceAddress, uint8_t index, uint32_t *data,
                        TwoWire *i2c) {
   uint8_t buff[4];
-  int r = VL53L0X_read_multi(deviceAddress, index, buff, 4, i2c);
+  VL53L0X_Error r = VL53L0X_read_multi(deviceAddress, index, buff, 4, i2c);
 
   uint32_t tmp;
   tmp = buff[0];
