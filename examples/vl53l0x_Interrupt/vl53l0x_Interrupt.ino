@@ -13,6 +13,7 @@ void setup() {
   }
   Serial.println(F("VL53L0X API Interrupt Ranging example\n\n"));
 
+  pinMode(VL53LOX_ShutdownPin, OUTPUT);
   pinMode(VL53LOX_ShutdownPin, INPUT_PULLUP);
   pinMode(VL53LOX_InterruptPin, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(VL53LOX_InterruptPin), VL53LOXISR,
