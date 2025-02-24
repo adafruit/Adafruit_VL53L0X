@@ -1,8 +1,16 @@
 #include "Adafruit_VL53L0X.h"
 const byte VL53L0X_InterruptPin = 6;
 const byte VL53L0X_ShutdownPin = 9;
-volatile byte VL53L0X_State = LOW;
+volatile VL53L0X_State VL53L0X_State_ = LOW;
 Adafruit_VL53L0X lox = Adafruit_VL53L0X();
+
+void VL53L0XISR() {
+  // Read if we are high or low
+  VL53L0X_State_ = digitalRead(VL53L0X_InterruptPin);
+  // set the built in LED to reflect in range on for Out of range off for in
+  // range
+  digitalWrite(LED_BUILTIN, VL53L0X_State_);
+}
 
 void setup() {
   Serial.begin(115200);
@@ -62,16 +70,8 @@ void setup() {
   lox.startMeasurement();
 }
 
-void VL53L0XISR() {
-  // Read if we are high or low
-  VL53L0X_State = digitalRead(VL53L0X_InterruptPin);
-  // set the built in LED to reflect in range on for Out of range off for in
-  // range
-  digitalWrite(LED_BUILTIN, VL53L0X_State);
-}
-
 void loop() {
-  if (VL53L0X_State == LOW) {
+  if (VL53L0X_State_ == LOW) {
     VL53L0X_RangingMeasurementData_t measure;
     Serial.print("Reading a measurement... ");
     lox.getRangingMeasurement(
