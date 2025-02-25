@@ -4,6 +4,14 @@ const byte VL53LOX_ShutdownPin = 9;
 volatile byte VL53LOX_State = LOW;
 Adafruit_VL53L0X lox = Adafruit_VL53L0X();
 
+void VL53LOXISR() {
+  // Read if we are high or low
+  VL53LOX_State = digitalRead(VL53LOX_InterruptPin);
+  // set the built in LED to reflect in range on for Out of range off for in
+  // range
+  digitalWrite(LED_BUILTIN, VL53LOX_State);
+}
+
 void setup() {
   Serial.begin(115200);
 
@@ -13,6 +21,7 @@ void setup() {
   }
   Serial.println(F("VL53L0X API Interrupt Ranging example\n\n"));
 
+  pinMode(VL53LOX_ShutdownPin, OUTPUT);
   pinMode(VL53LOX_ShutdownPin, INPUT_PULLUP);
   pinMode(VL53LOX_InterruptPin, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(VL53LOX_InterruptPin), VL53LOXISR,
@@ -58,14 +67,6 @@ void setup() {
 
   Serial.println("StartMeasurement... ");
   lox.startMeasurement();
-}
-
-void VL53LOXISR() {
-  // Read if we are high or low
-  VL53LOX_State = digitalRead(VL53LOX_InterruptPin);
-  // set the built in LED to reflect in range on for Out of range off for in
-  // range
-  digitalWrite(LED_BUILTIN, VL53LOX_State);
 }
 
 void loop() {

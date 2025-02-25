@@ -124,44 +124,44 @@ typedef struct {
 typedef int8_t VL53L0X_Error;
 
 #define VL53L0X_ERROR_NONE ((VL53L0X_Error)0)
-#define VL53L0X_ERROR_CALIBRATION_WARNING ((VL53L0X_Error)-1)
+#define VL53L0X_ERROR_CALIBRATION_WARNING ((VL53L0X_Error) - 1)
 /*!< Warning invalid calibration data may be in used
         \a	VL53L0X_InitData()
         \a VL53L0X_GetOffsetCalibrationData
         \a VL53L0X_SetOffsetCalibrationData */
-#define VL53L0X_ERROR_MIN_CLIPPED ((VL53L0X_Error)-2)
+#define VL53L0X_ERROR_MIN_CLIPPED ((VL53L0X_Error) - 2)
 /*!< Warning parameter passed was clipped to min before to be applied */
 
-#define VL53L0X_ERROR_UNDEFINED ((VL53L0X_Error)-3)
+#define VL53L0X_ERROR_UNDEFINED ((VL53L0X_Error) - 3)
 /*!< Unqualified error */
-#define VL53L0X_ERROR_INVALID_PARAMS ((VL53L0X_Error)-4)
+#define VL53L0X_ERROR_INVALID_PARAMS ((VL53L0X_Error) - 4)
 /*!< Parameter passed is invalid or out of range */
-#define VL53L0X_ERROR_NOT_SUPPORTED ((VL53L0X_Error)-5)
+#define VL53L0X_ERROR_NOT_SUPPORTED ((VL53L0X_Error) - 5)
 /*!< Function is not supported in current mode or configuration */
-#define VL53L0X_ERROR_RANGE_ERROR ((VL53L0X_Error)-6)
+#define VL53L0X_ERROR_RANGE_ERROR ((VL53L0X_Error) - 6)
 /*!< Device report a ranging error interrupt status */
-#define VL53L0X_ERROR_TIME_OUT ((VL53L0X_Error)-7)
+#define VL53L0X_ERROR_TIME_OUT ((VL53L0X_Error) - 7)
 /*!< Aborted due to time out */
-#define VL53L0X_ERROR_MODE_NOT_SUPPORTED ((VL53L0X_Error)-8)
+#define VL53L0X_ERROR_MODE_NOT_SUPPORTED ((VL53L0X_Error) - 8)
 /*!< Asked mode is not supported by the device */
-#define VL53L0X_ERROR_BUFFER_TOO_SMALL ((VL53L0X_Error)-9)
+#define VL53L0X_ERROR_BUFFER_TOO_SMALL ((VL53L0X_Error) - 9)
 /*!< ... */
-#define VL53L0X_ERROR_GPIO_NOT_EXISTING ((VL53L0X_Error)-10)
+#define VL53L0X_ERROR_GPIO_NOT_EXISTING ((VL53L0X_Error) - 10)
 /*!< User tried to setup a non-existing GPIO pin */
-#define VL53L0X_ERROR_GPIO_FUNCTIONALITY_NOT_SUPPORTED ((VL53L0X_Error)-11)
+#define VL53L0X_ERROR_GPIO_FUNCTIONALITY_NOT_SUPPORTED ((VL53L0X_Error) - 11)
 /*!< unsupported GPIO functionality */
-#define VL53L0X_ERROR_INTERRUPT_NOT_CLEARED ((VL53L0X_Error)-12)
+#define VL53L0X_ERROR_INTERRUPT_NOT_CLEARED ((VL53L0X_Error) - 12)
 /*!< Error during interrupt clear */
-#define VL53L0X_ERROR_CONTROL_INTERFACE ((VL53L0X_Error)-20)
+#define VL53L0X_ERROR_CONTROL_INTERFACE ((VL53L0X_Error) - 20)
 /*!< error reported from IO functions */
-#define VL53L0X_ERROR_INVALID_COMMAND ((VL53L0X_Error)-30)
+#define VL53L0X_ERROR_INVALID_COMMAND ((VL53L0X_Error) - 30)
 /*!< The command is not allowed in the current device state
  *	(power down) */
-#define VL53L0X_ERROR_DIVISION_BY_ZERO ((VL53L0X_Error)-40)
+#define VL53L0X_ERROR_DIVISION_BY_ZERO ((VL53L0X_Error) - 40)
 /*!< In the function a division by zero occurs */
-#define VL53L0X_ERROR_REF_SPAD_INIT ((VL53L0X_Error)-50)
+#define VL53L0X_ERROR_REF_SPAD_INIT ((VL53L0X_Error) - 50)
 /*!< Error during reference SPAD initialization */
-#define VL53L0X_ERROR_NOT_IMPLEMENTED ((VL53L0X_Error)-99)
+#define VL53L0X_ERROR_NOT_IMPLEMENTED ((VL53L0X_Error) - 99)
 /*!< Tells requested functionality has not been implemented yet or
  * not compatible with the device */
 /** @} VL53L0X_define_Error_group */

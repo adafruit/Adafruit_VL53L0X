@@ -43,7 +43,7 @@ extern "C" {
  * @brief platform log function definition
  */
 
-//#define VL53L0X_LOG_ENABLE 0
+// #define VL53L0X_LOG_ENABLE 0
 
 enum {
   TRACE_LEVEL_NONE,
@@ -100,7 +100,7 @@ void trace_print_module_function(uint32_t module, uint32_t level,
                               __FUNCTION__, (int)status, ##__VA_ARGS__)
 
 // __func__ is gcc only
-//#define VL53L0X_ErrLog( fmt, ...)  fprintf(stderr, "VL53L0X_ErrLog %s" fmt
+// #define VL53L0X_ErrLog( fmt, ...)  fprintf(stderr, "VL53L0X_ErrLog %s" fmt
 //"\n", __func__, ##__VA_ARGS__)
 
 #else /* VL53L0X_LOG_ENABLE no logging */
