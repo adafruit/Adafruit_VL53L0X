@@ -64,7 +64,7 @@ typedef struct {
       comms_type; /*!< Type of comms : VL53L0X_COMMS_I2C or VL53L0X_COMMS_SPI */
   uint16_t comms_speed_khz; /*!< Comms speed [kHz] : typically 400kHz for I2C */
 
-  TwoWire *i2c;
+  TwoWire* i2c;
 
 } VL53L0X_Dev_t;
 
@@ -73,7 +73,7 @@ typedef struct {
  * VL53L0X_Dev_t.
  *
  */
-typedef VL53L0X_Dev_t *VL53L0X_DEV;
+typedef VL53L0X_Dev_t* VL53L0X_DEV;
 
 /**
  * @def PALDevDataGet
@@ -130,7 +130,7 @@ VL53L0X_Error VL53L0X_UnlockSequenceAccess(VL53L0X_DEV Dev);
  * @return  VL53L0X_ERROR_NONE        Success
  * @return  "Other error code"    See ::VL53L0X_Error
  */
-VL53L0X_Error VL53L0X_WriteMulti(VL53L0X_DEV Dev, uint8_t index, uint8_t *pdata,
+VL53L0X_Error VL53L0X_WriteMulti(VL53L0X_DEV Dev, uint8_t index, uint8_t* pdata,
                                  uint32_t count);
 
 /**
@@ -142,7 +142,7 @@ VL53L0X_Error VL53L0X_WriteMulti(VL53L0X_DEV Dev, uint8_t index, uint8_t *pdata,
  * @return  VL53L0X_ERROR_NONE        Success
  * @return  "Other error code"    See ::VL53L0X_Error
  */
-VL53L0X_Error VL53L0X_ReadMulti(VL53L0X_DEV Dev, uint8_t index, uint8_t *pdata,
+VL53L0X_Error VL53L0X_ReadMulti(VL53L0X_DEV Dev, uint8_t index, uint8_t* pdata,
                                 uint32_t count);
 
 /**
@@ -183,7 +183,7 @@ VL53L0X_Error VL53L0X_WrDWord(VL53L0X_DEV Dev, uint8_t index, uint32_t data);
  * @return  VL53L0X_ERROR_NONE        Success
  * @return  "Other error code"    See ::VL53L0X_Error
  */
-VL53L0X_Error VL53L0X_RdByte(VL53L0X_DEV Dev, uint8_t index, uint8_t *data);
+VL53L0X_Error VL53L0X_RdByte(VL53L0X_DEV Dev, uint8_t index, uint8_t* data);
 
 /**
  * Read word (2byte) register
@@ -193,7 +193,7 @@ VL53L0X_Error VL53L0X_RdByte(VL53L0X_DEV Dev, uint8_t index, uint8_t *data);
  * @return  VL53L0X_ERROR_NONE        Success
  * @return  "Other error code"    See ::VL53L0X_Error
  */
-VL53L0X_Error VL53L0X_RdWord(VL53L0X_DEV Dev, uint8_t index, uint16_t *data);
+VL53L0X_Error VL53L0X_RdWord(VL53L0X_DEV Dev, uint8_t index, uint16_t* data);
 
 /**
  * Read dword (4byte) register
@@ -203,7 +203,7 @@ VL53L0X_Error VL53L0X_RdWord(VL53L0X_DEV Dev, uint8_t index, uint16_t *data);
  * @return  VL53L0X_ERROR_NONE        Success
  * @return  "Other error code"    See ::VL53L0X_Error
  */
-VL53L0X_Error VL53L0X_RdDWord(VL53L0X_DEV Dev, uint8_t index, uint32_t *data);
+VL53L0X_Error VL53L0X_RdDWord(VL53L0X_DEV Dev, uint8_t index, uint32_t* data);
 
 /**
  * Threat safe Update (read/modify/write) single byte register

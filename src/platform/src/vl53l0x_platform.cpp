@@ -35,14 +35,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
 #include "../../vl53l0x_platform.h"
+
 #include "../../vl53l0x_api.h"
 #include "../../vl53l0x_i2c_platform.h"
 
-#define LOG_FUNCTION_START(fmt, ...)                                           \
+#define LOG_FUNCTION_START(fmt, ...) \
   _LOG_FUNCTION_START(TRACE_MODULE_PLATFORM, fmt, ##__VA_ARGS__)
-#define LOG_FUNCTION_END(status, ...)                                          \
+#define LOG_FUNCTION_END(status, ...) \
   _LOG_FUNCTION_END(TRACE_MODULE_PLATFORM, status, ##__VA_ARGS__)
-#define LOG_FUNCTION_END_FMT(status, fmt, ...)                                 \
+#define LOG_FUNCTION_END_FMT(status, fmt, ...) \
   _LOG_FUNCTION_END_FMT(TRACE_MODULE_PLATFORM, status, fmt, ##__VA_ARGS__)
 
 /**
@@ -68,8 +69,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #define I2C_BUFFER_CONFIG 1
 /** Maximum buffer size to be used in i2c */
-#define VL53L0X_MAX_I2C_XFER_SIZE                                              \
-  64 /* Maximum buffer size to be used in i2c                                  \
+#define VL53L0X_MAX_I2C_XFER_SIZE             \
+  64 /* Maximum buffer size to be used in i2c \
       */
 
 #if I2C_BUFFER_CONFIG == 0
@@ -91,8 +92,8 @@ uint8_t i2c_global_buffer[VL53L0X_MAX_I2C_XFER_SIZE];
 #error "invalid I2C_BUFFER_CONFIG "
 #endif
 
-#define VL53L0X_I2C_USER_VAR /* none but could be for a flag var to get/pass   \
-                                to mutex interruptible  return flags and try   \
+#define VL53L0X_I2C_USER_VAR /* none but could be for a flag var to get/pass \
+                                to mutex interruptible  return flags and try \
                                 again */
 #define VL53L0X_GetI2CAccess(Dev) /* todo mutex acquire */
 #define VL53L0X_DoneI2CAcces(Dev) /* todo mutex release */
@@ -110,9 +111,8 @@ VL53L0X_Error VL53L0X_UnlockSequenceAccess(VL53L0X_DEV Dev) {
 }
 
 // the ranging_sensor_comms.dll will take care of the page selection
-VL53L0X_Error VL53L0X_WriteMulti(VL53L0X_DEV Dev, uint8_t index, uint8_t *pdata,
+VL53L0X_Error VL53L0X_WriteMulti(VL53L0X_DEV Dev, uint8_t index, uint8_t* pdata,
                                  uint32_t count) {
-
   VL53L0X_Error Status = VL53L0X_ERROR_NONE;
   int32_t status_int = 0;
   uint8_t deviceAddress;
@@ -133,7 +133,7 @@ VL53L0X_Error VL53L0X_WriteMulti(VL53L0X_DEV Dev, uint8_t index, uint8_t *pdata,
 }
 
 // the ranging_sensor_comms.dll will take care of the page selection
-VL53L0X_Error VL53L0X_ReadMulti(VL53L0X_DEV Dev, uint8_t index, uint8_t *pdata,
+VL53L0X_Error VL53L0X_ReadMulti(VL53L0X_DEV Dev, uint8_t index, uint8_t* pdata,
                                 uint32_t count) {
   VL53L0X_I2C_USER_VAR
   VL53L0X_Error Status = VL53L0X_ERROR_NONE;
@@ -224,7 +224,7 @@ VL53L0X_Error VL53L0X_UpdateByte(VL53L0X_DEV Dev, uint8_t index,
   return Status;
 }
 
-VL53L0X_Error VL53L0X_RdByte(VL53L0X_DEV Dev, uint8_t index, uint8_t *data) {
+VL53L0X_Error VL53L0X_RdByte(VL53L0X_DEV Dev, uint8_t index, uint8_t* data) {
   VL53L0X_Error Status = VL53L0X_ERROR_NONE;
   int32_t status_int;
   uint8_t deviceAddress;
@@ -239,7 +239,7 @@ VL53L0X_Error VL53L0X_RdByte(VL53L0X_DEV Dev, uint8_t index, uint8_t *data) {
   return Status;
 }
 
-VL53L0X_Error VL53L0X_RdWord(VL53L0X_DEV Dev, uint8_t index, uint16_t *data) {
+VL53L0X_Error VL53L0X_RdWord(VL53L0X_DEV Dev, uint8_t index, uint16_t* data) {
   VL53L0X_Error Status = VL53L0X_ERROR_NONE;
   int32_t status_int;
   uint8_t deviceAddress;
@@ -254,7 +254,7 @@ VL53L0X_Error VL53L0X_RdWord(VL53L0X_DEV Dev, uint8_t index, uint16_t *data) {
   return Status;
 }
 
-VL53L0X_Error VL53L0X_RdDWord(VL53L0X_DEV Dev, uint8_t index, uint32_t *data) {
+VL53L0X_Error VL53L0X_RdDWord(VL53L0X_DEV Dev, uint8_t index, uint32_t* data) {
   VL53L0X_Error Status = VL53L0X_ERROR_NONE;
   int32_t status_int;
   uint8_t deviceAddress;

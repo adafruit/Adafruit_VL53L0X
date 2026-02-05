@@ -124,44 +124,44 @@ typedef struct {
 typedef int8_t VL53L0X_Error;
 
 #define VL53L0X_ERROR_NONE ((VL53L0X_Error)0)
-#define VL53L0X_ERROR_CALIBRATION_WARNING ((VL53L0X_Error)-1)
+#define VL53L0X_ERROR_CALIBRATION_WARNING ((VL53L0X_Error) - 1)
 /*!< Warning invalid calibration data may be in used
         \a	VL53L0X_InitData()
         \a VL53L0X_GetOffsetCalibrationData
         \a VL53L0X_SetOffsetCalibrationData */
-#define VL53L0X_ERROR_MIN_CLIPPED ((VL53L0X_Error)-2)
+#define VL53L0X_ERROR_MIN_CLIPPED ((VL53L0X_Error) - 2)
 /*!< Warning parameter passed was clipped to min before to be applied */
 
-#define VL53L0X_ERROR_UNDEFINED ((VL53L0X_Error)-3)
+#define VL53L0X_ERROR_UNDEFINED ((VL53L0X_Error) - 3)
 /*!< Unqualified error */
-#define VL53L0X_ERROR_INVALID_PARAMS ((VL53L0X_Error)-4)
+#define VL53L0X_ERROR_INVALID_PARAMS ((VL53L0X_Error) - 4)
 /*!< Parameter passed is invalid or out of range */
-#define VL53L0X_ERROR_NOT_SUPPORTED ((VL53L0X_Error)-5)
+#define VL53L0X_ERROR_NOT_SUPPORTED ((VL53L0X_Error) - 5)
 /*!< Function is not supported in current mode or configuration */
-#define VL53L0X_ERROR_RANGE_ERROR ((VL53L0X_Error)-6)
+#define VL53L0X_ERROR_RANGE_ERROR ((VL53L0X_Error) - 6)
 /*!< Device report a ranging error interrupt status */
-#define VL53L0X_ERROR_TIME_OUT ((VL53L0X_Error)-7)
+#define VL53L0X_ERROR_TIME_OUT ((VL53L0X_Error) - 7)
 /*!< Aborted due to time out */
-#define VL53L0X_ERROR_MODE_NOT_SUPPORTED ((VL53L0X_Error)-8)
+#define VL53L0X_ERROR_MODE_NOT_SUPPORTED ((VL53L0X_Error) - 8)
 /*!< Asked mode is not supported by the device */
-#define VL53L0X_ERROR_BUFFER_TOO_SMALL ((VL53L0X_Error)-9)
+#define VL53L0X_ERROR_BUFFER_TOO_SMALL ((VL53L0X_Error) - 9)
 /*!< ... */
-#define VL53L0X_ERROR_GPIO_NOT_EXISTING ((VL53L0X_Error)-10)
+#define VL53L0X_ERROR_GPIO_NOT_EXISTING ((VL53L0X_Error) - 10)
 /*!< User tried to setup a non-existing GPIO pin */
-#define VL53L0X_ERROR_GPIO_FUNCTIONALITY_NOT_SUPPORTED ((VL53L0X_Error)-11)
+#define VL53L0X_ERROR_GPIO_FUNCTIONALITY_NOT_SUPPORTED ((VL53L0X_Error) - 11)
 /*!< unsupported GPIO functionality */
-#define VL53L0X_ERROR_INTERRUPT_NOT_CLEARED ((VL53L0X_Error)-12)
+#define VL53L0X_ERROR_INTERRUPT_NOT_CLEARED ((VL53L0X_Error) - 12)
 /*!< Error during interrupt clear */
-#define VL53L0X_ERROR_CONTROL_INTERFACE ((VL53L0X_Error)-20)
+#define VL53L0X_ERROR_CONTROL_INTERFACE ((VL53L0X_Error) - 20)
 /*!< error reported from IO functions */
-#define VL53L0X_ERROR_INVALID_COMMAND ((VL53L0X_Error)-30)
+#define VL53L0X_ERROR_INVALID_COMMAND ((VL53L0X_Error) - 30)
 /*!< The command is not allowed in the current device state
  *	(power down) */
-#define VL53L0X_ERROR_DIVISION_BY_ZERO ((VL53L0X_Error)-40)
+#define VL53L0X_ERROR_DIVISION_BY_ZERO ((VL53L0X_Error) - 40)
 /*!< In the function a division by zero occurs */
-#define VL53L0X_ERROR_REF_SPAD_INIT ((VL53L0X_Error)-50)
+#define VL53L0X_ERROR_REF_SPAD_INIT ((VL53L0X_Error) - 50)
 /*!< Error during reference SPAD initialization */
-#define VL53L0X_ERROR_NOT_IMPLEMENTED ((VL53L0X_Error)-99)
+#define VL53L0X_ERROR_NOT_IMPLEMENTED ((VL53L0X_Error) - 99)
 /*!< Tells requested functionality has not been implemented yet or
  * not compatible with the device */
 /** @} VL53L0X_define_Error_group */
@@ -457,7 +457,7 @@ typedef struct {
   /*!< Signal Estimate - based on ambient & VCSEL rates and cross talk */
   FixPoint1616_t LastSignalRefMcps;
   /*!< Latest Signal ref in Mcps */
-  uint8_t *pTuningSettingsPointer;
+  uint8_t* pTuningSettingsPointer;
   /*!< Pointer for Tuning Settings table */
   uint8_t UseInternalTuningSettings;
   /*!< Indicate if we use	 Tuning Settings table */
@@ -543,52 +543,52 @@ typedef uint8_t VL53L0X_SequenceStepId;
  */
 
 /* Defines */
-#define VL53L0X_SETPARAMETERFIELD(Dev, field, value)                           \
+#define VL53L0X_SETPARAMETERFIELD(Dev, field, value) \
   PALDevDataSet(Dev, CurrentParameters.field, value)
 
-#define VL53L0X_GETPARAMETERFIELD(Dev, field, variable)                        \
+#define VL53L0X_GETPARAMETERFIELD(Dev, field, variable) \
   variable = PALDevDataGet(Dev, CurrentParameters).field
 
-#define VL53L0X_SETARRAYPARAMETERFIELD(Dev, field, index, value)               \
+#define VL53L0X_SETARRAYPARAMETERFIELD(Dev, field, index, value) \
   PALDevDataSet(Dev, CurrentParameters.field[index], value)
 
-#define VL53L0X_GETARRAYPARAMETERFIELD(Dev, field, index, variable)            \
+#define VL53L0X_GETARRAYPARAMETERFIELD(Dev, field, index, variable) \
   variable = PALDevDataGet(Dev, CurrentParameters).field[index]
 
-#define VL53L0X_SETDEVICESPECIFICPARAMETER(Dev, field, value)                  \
+#define VL53L0X_SETDEVICESPECIFICPARAMETER(Dev, field, value) \
   PALDevDataSet(Dev, DeviceSpecificParameters.field, value)
 
-#define VL53L0X_GETDEVICESPECIFICPARAMETER(Dev, field)                         \
+#define VL53L0X_GETDEVICESPECIFICPARAMETER(Dev, field) \
   PALDevDataGet(Dev, DeviceSpecificParameters).field
 
-#define VL53L0X_FIXPOINT1616TOFIXPOINT97(Value)                                \
+#define VL53L0X_FIXPOINT1616TOFIXPOINT97(Value) \
   (uint16_t)((Value >> 9) & 0xFFFF)
 #define VL53L0X_FIXPOINT97TOFIXPOINT1616(Value) (FixPoint1616_t)(Value << 9)
 
-#define VL53L0X_FIXPOINT1616TOFIXPOINT88(Value)                                \
+#define VL53L0X_FIXPOINT1616TOFIXPOINT88(Value) \
   (uint16_t)((Value >> 8) & 0xFFFF)
 #define VL53L0X_FIXPOINT88TOFIXPOINT1616(Value) (FixPoint1616_t)(Value << 8)
 
-#define VL53L0X_FIXPOINT1616TOFIXPOINT412(Value)                               \
+#define VL53L0X_FIXPOINT1616TOFIXPOINT412(Value) \
   (uint16_t)((Value >> 4) & 0xFFFF)
 #define VL53L0X_FIXPOINT412TOFIXPOINT1616(Value) (FixPoint1616_t)(Value << 4)
 
-#define VL53L0X_FIXPOINT1616TOFIXPOINT313(Value)                               \
+#define VL53L0X_FIXPOINT1616TOFIXPOINT313(Value) \
   (uint16_t)((Value >> 3) & 0xFFFF)
 #define VL53L0X_FIXPOINT313TOFIXPOINT1616(Value) (FixPoint1616_t)(Value << 3)
 
 #define VL53L0X_FIXPOINT1616TOFIXPOINT08(Value) (uint8_t)((Value >> 8) & 0x00FF)
 #define VL53L0X_FIXPOINT08TOFIXPOINT1616(Value) (FixPoint1616_t)(Value << 8)
 
-#define VL53L0X_FIXPOINT1616TOFIXPOINT53(Value)                                \
+#define VL53L0X_FIXPOINT1616TOFIXPOINT53(Value) \
   (uint8_t)((Value >> 13) & 0x00FF)
 #define VL53L0X_FIXPOINT53TOFIXPOINT1616(Value) (FixPoint1616_t)(Value << 13)
 
-#define VL53L0X_FIXPOINT1616TOFIXPOINT102(Value)                               \
+#define VL53L0X_FIXPOINT1616TOFIXPOINT102(Value) \
   (uint16_t)((Value >> 14) & 0x0FFF)
 #define VL53L0X_FIXPOINT102TOFIXPOINT1616(Value) (FixPoint1616_t)(Value << 12)
 
-#define VL53L0X_MAKEUINT16(lsb, msb)                                           \
+#define VL53L0X_MAKEUINT16(lsb, msb) \
   (uint16_t)((((uint16_t)msb) << 8) + (uint16_t)lsb)
 
 /** @} VL53L0X_define_GeneralMacro_group */
