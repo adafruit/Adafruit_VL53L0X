@@ -212,7 +212,7 @@ boolean Adafruit_VL53L0X::setAddress(uint8_t newAddr) {
     @returns The address the sensor is actually associated.
 */
 /**************************************************************************/
-uint8_t Adafruit_VL53L0X::getAddress(void){
+uint8_t Adafruit_VL53L0X::getAddress(void) {
   uint8_t currentAddress = pMyDevice->I2cDevAddr;
   return (currentAddress);
 }
