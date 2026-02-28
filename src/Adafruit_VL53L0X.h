@@ -54,7 +54,7 @@ class Adafruit_VL53L0X {
                 VL53L0X_Sense_config_t vl_config = VL53L0X_SENSE_DEFAULT);
   boolean setAddress(uint8_t newAddr);
 
-  // uint8_t getAddress(void); // not currently implemented
+  uint8_t getAddress(void);
 
   /**************************************************************************/
   /*!

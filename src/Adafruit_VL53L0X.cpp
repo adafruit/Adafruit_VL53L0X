@@ -208,6 +208,17 @@ boolean Adafruit_VL53L0X::setAddress(uint8_t newAddr) {
 
 /**************************************************************************/
 /*!
+    @brief  Get the I2C address of the sensor
+    @returns The address the sensor is actually associated.
+*/
+/**************************************************************************/
+uint8_t Adafruit_VL53L0X::getAddress(void){
+  uint8_t currentAddress = pMyDevice->I2cDevAddr;
+  return (currentAddress);
+}
+
+/**************************************************************************/
+/*!
     @brief  Configure the sensor for one of the ways the example ST
     sketches configure the sensors for different usages.
     @param  vl_config Which configureation you are trying to configure for
